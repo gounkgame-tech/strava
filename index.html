@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Samíkovo brikule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12140F;
+    --bg-alt:#161911;
+    --card:#1B1F16;
+    --card-hover:#20241A;
+    --ink:#EAEDE2;
+    --ink-soft:#8B9280;
+    --ink-faint:#5C6353;
+    --herb:#A8E063;
+    --herb-dim:#5C7A3A;
+    --turmeric:#F0AC44;
+    --turmeric-dim:#8A6A2E;
+    --clay:#F0765C;
+    --line:#262B1E;
+    --line-strong:#343B28;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, #1A2013 0%, transparent 45%),
+      radial-gradient(1.4px 1.4px at 40px 60px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 120px 140px, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1.6px 1.6px at 200px 30px, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 260px 180px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1.2px 1.2px at 320px 90px, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 80px 220px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1.4px 1.4px at 360px 250px, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1px 1px at 180px 280px, rgba(255,255,255,0.25), transparent);
+    background-repeat:no-repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat;
+    background-size:auto,400px 320px,400px 320px,400px 320px,400px 320px,400px 320px,400px 320px,400px 320px,400px 320px;
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    padding:28px 18px 60px;
+    min-height:100vh;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:16px;
+    border-bottom:1px solid var(--line-strong);
+    padding-bottom:18px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(26px,5vw,34px);
+    margin:0;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  h1 .dot{color:var(--herb);}
+  header p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+  .reset-btn{
+    background:transparent;
+    border:1px solid var(--line-strong);
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:500;
+    font-size:12.5px;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:border-color .15s,color .15s;
+  }
+  .reset-btn:hover{border-color:var(--herb);color:var(--herb);}
+  .reset-btn:active{transform:scale(0.97);}
+
+  .entry-form{
+    display:flex;
+    gap:10px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .entry-form select{
+    flex:1 1 200px;
+    padding:14px 16px;
+    border-radius:10px;
+    border:1px solid var(--line-strong);
+    background:var(--card);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    color:var(--ink);
+  }
+  .entry-form select:focus, .entry-form input[type=number]:focus{
+    outline:none;
+    border-color:var(--herb);
+  }
+  .entry-form input[type=number]{
+    padding:14px 12px;
+    border-radius:10px;
+    border:1px solid var(--line-strong);
+    background:var(--card);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:15px;
+    color:var(--ink);
+  }
+  .entry-form input[type=text]{
+    flex:1 1 260px;
+    padding:14px 16px;
+    border-radius:10px;
+    border:1px solid var(--line-strong);
+    background:var(--card);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    color:var(--ink);
+  }
+  .entry-form input[type=text]::placeholder{color:var(--ink-faint);}
+  .entry-form input[type=text]:focus{
+    outline:none;
+    border-color:var(--herb);
+  }
+  .entry-form button{
+    background:var(--herb);
+    color:#12140F;
+    border:none;
+    border-radius:10px;
+    padding:0 22px;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .entry-form button:hover:not(:disabled){background:#BEEB80;}
+  .entry-form button:disabled{opacity:.4;cursor:default;}
+
+  .hint{font-size:12.5px;color:var(--ink-faint);margin:0 0 22px;}
+  .error-msg{
+    font-size:13px;color:var(--clay);margin:-4px 0 18px;
+    font-weight:500;
+  }
+
+  .tabs{
+    display:flex;gap:4px;margin-bottom:24px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .tab-btn{
+    background:none;border:none;
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:16px;
+    color:var(--ink-faint);
+    padding:10px 6px 12px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    margin-right:24px;
+    transition:color .15s,border-color .15s;
+  }
+  .tab-btn.active{color:var(--ink);border-color:var(--herb);}
+
+  /* macro strip */
+  .macro-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line-strong);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .macro-box{
+    background:var(--card);
+    padding:16px 12px;
+    text-align:center;
+  }
+  .macro-box .val{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:25px;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.1;
+  }
+  .macro-box .unit{font-size:12px;color:var(--ink-soft);margin-left:2px;}
+  .macro-box .lab{
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-top:7px;
+  }
+  .macro-box .sub{
+    font-size:10.5px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink-faint);
+    margin-top:4px;
+  }
+
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:500;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:28px 0 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-label::after{
+    content:"";flex:1;height:1px;background:var(--line-strong);
+  }
+
+  /* today's food list */
+  .log-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+  .log-chip{
+    background:var(--card);
+    border:1px solid var(--line-strong);
+    border-radius:8px;
+    padding:6px 8px 6px 14px;
+    font-size:13px;
+    display:flex;align-items:center;gap:8px;
+    max-width:100%;
+  }
+  .log-chip .time{color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;font-size:11px;}
+  .log-chip .name{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .log-chip button{
+    background:var(--line-strong);
+    border:none;border-radius:50%;
+    width:20px;height:20px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    font-size:13px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .log-chip button:hover{background:var(--clay);color:#12140F;}
+  .empty-log{color:var(--ink-faint);font-size:13.5px;font-style:italic;}
+
+  /* nutrient tiles */
+  .tile-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(122px,1fr));
+    gap:10px;
+  }
+  .tile{
+    background:var(--card);
+    border:1px solid var(--line-strong);
+    border-left:3px solid var(--line-strong);
+    border-radius:8px;
+    padding:10px 10px 12px;
+    position:relative;
+    overflow:hidden;
+  }
+  .tile.vit{border-left-color:var(--herb-dim);}
+  .tile.min{border-left-color:var(--turmeric-dim);}
+  .tile .symbol{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:17px;
+  }
+  .tile.vit .symbol{color:var(--herb);}
+  .tile.min .symbol{color:var(--turmeric);}
+  .tile .name{
+    font-size:11px;color:var(--ink-soft);
+    margin:2px 0 10px;
+    line-height:1.25;
+    min-height:27px;
+  }
+  .tile .amt{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .tile .bar-track{
+    height:5px;border-radius:3px;
+    background:var(--line-strong);
+    overflow:hidden;
+  }
+  .tile .bar-fill{height:100%;border-radius:3px;}
+  .tile.vit .bar-fill{background:var(--herb);}
+  .tile.min .bar-fill{background:var(--turmeric);}
+  .tile .pct{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-faint);
+    margin-top:5px;
+    text-align:right;
+  }
+  .tile.done{border-left-color:var(--herb);}
+  .tile.done.min{border-left-color:var(--turmeric);}
+  .tile .check{
+    position:absolute;top:8px;right:9px;
+    font-size:11px;color:var(--herb);
+  }
+  .tile.min .check{color:var(--turmeric);}
+
+  /* nutrient info cards (tab 2) */
+  .info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:12px;
+  }
+  .info-card{
+    background:var(--card);
+    border:1px solid var(--line-strong);
+    border-left:3px solid var(--line-strong);
+    border-radius:10px;
+    padding:16px 16px 15px;
+    cursor:pointer;
+    transition:border-color .15s,background .15s;
+  }
+  .info-card:hover{background:var(--card-hover);}
+  .info-card.vit{border-left-color:var(--herb-dim);}
+  .info-card.min{border-left-color:var(--turmeric-dim);}
+  .info-card.open.vit{border-color:var(--herb);border-left-color:var(--herb);}
+  .info-card.open.min{border-color:var(--turmeric);border-left-color:var(--turmeric);}
+  .info-card .head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .info-card .badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:14px;
+    width:34px;height:34px;
+    border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:#12140F;
+    flex-shrink:0;
+  }
+  .info-card.vit .badge{background:var(--herb);}
+  .info-card.min .badge{background:var(--turmeric);}
+  .info-card h3{
+    font-family:'Fraunces',serif;
+    font-size:16px;font-weight:600;margin:0;
+    flex:1;color:var(--ink);
+  }
+  .info-card .chev{
+    font-size:10px;color:var(--ink-faint);flex-shrink:0;
+  }
+  .info-card p{
+    font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:0;
+  }
+  .info-card .sources{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed var(--line-strong);
+  }
+  .info-card .sources-label{
+    font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:6px;font-weight:600;
+  }
+  .info-card .sources ul{
+    margin:0;padding:0;list-style:none;
+    display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .info-card .sources li{
+    background:var(--bg-alt);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    padding:4px 10px;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+
+  .loading-note{font-size:13px;color:var(--herb);margin:-4px 0 18px;font-weight:500;}
+
+  @media (max-width:520px){
+    .macro-strip{grid-template-columns:repeat(2,1fr);}
+    .log-chip .name{max-width:140px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- nutrient reference data (EU NRV) ---------- */
+const VITAMINS = [
+  {key:"vitA_ug", symbol:"A", name:"Vitamin A", unit:"µg", nrv:800,
+    desc:"Podporuje vidění za šera, obnovu kůže a sliznic a správnou funkci imunitního systému; podílí se i na růstu buněk.",
+    sources:["Mrkev","Sladké brambory","Špenát","Vejce","Tuňák"]},
+  {key:"vitD_ug", symbol:"D", name:"Vitamin D", unit:"µg", nrv:5,
+    desc:"Reguluje vstřebávání vápníku a fosforu, je klíčový pro pevnost kostí a zubů a ovlivňuje funkci imunitního systému a svalů.",
+    sources:["Losos","Sardinky","Vaječný žloutek","Houby","Makrela"]},
+  {key:"vitE_mg", symbol:"E", name:"Vitamin E", unit:"mg", nrv:12,
+    desc:"Silný antioxidant, chrání buněčné membrány před oxidačním poškozením a podporuje zdraví kůže a imunitu.",
+    sources:["Mandle","Slunečnicová semínka","Avokádo","Olivový olej","Špenát"]},
+  {key:"vitK_ug", symbol:"K", name:"Vitamin K", unit:"µg", nrv:75,
+    desc:"Nezbytný pro srážení krve a podílí se na ukládání vápníku do kostí.",
+    sources:["Kapusta","Špenát","Brokolice","Růžičková kapusta","Olivový olej"]},
+  {key:"vitC_mg", symbol:"C", name:"Vitamin C", unit:"mg", nrv:80,
+    desc:"Podporuje imunitu a tvorbu kolagenu (kůže, cévy, chrupavky), zlepšuje vstřebávání železa z rostlinné stravy a působí jako antioxidant.",
+    sources:["Paprika","Citrusy","Kiwi","Brokolice","Jahody"]},
+  {key:"vitB1_mg", symbol:"B1", name:"Thiamin (B1)", unit:"mg", nrv:1.1,
+    desc:"Účastní se přeměny sacharidů na energii a podporuje správnou funkci nervové soustavy.",
+    sources:["Celozrnné obiloviny","Luštěniny","Slunečnicová semínka","Vepřové maso","Ořechy"]},
+  {key:"vitB2_mg", symbol:"B2", name:"Riboflavin (B2)", unit:"mg", nrv:1.4,
+    desc:"Podílí se na energetickém metabolismu a udržuje zdravou kůži, zrak a sliznice.",
+    sources:["Mléčné výrobky","Vejce","Mandle","Houby","Listová zelenina"]},
+  {key:"vitB3_mg", symbol:"B3", name:"Niacin (B3)", unit:"mg", nrv:16,
+    desc:"Pomáhá při tvorbě energie z jídla a podporuje nervový systém i zdraví kůže.",
+    sources:["Kuřecí maso","Tuňák","Arašídy","Celozrnné obiloviny","Houby"]},
+  {key:"vitB6_mg", symbol:"B6", name:"Vitamin B6", unit:"mg", nrv:1.4,
+    desc:"Účastní se metabolismu bílkovin a tvorby červených krvinek, ovlivňuje i nervový systém a náladu.",
+    sources:["Cizrna","Kuřecí maso","Brambory","Banán","Losos"]},
+  {key:"vitB9_ug", symbol:"B9", name:"Folát (B9)", unit:"µg", nrv:200,
+    desc:"Klíčový pro tvorbu nových buněk a DNA, důležitý zejména v těhotenství pro vývoj plodu.",
+    sources:["Listová zelenina","Čočka","Chřest","Avokádo","Brokolice"]},
+  {key:"vitB12_ug", symbol:"B12", name:"Vitamin B12", unit:"µg", nrv:2.5,
+    desc:"Nezbytný pro tvorbu červených krvinek a správnou funkci nervové soustavy; nachází se téměř výhradně v živočišných produktech.",
+    sources:["Hovězí maso","Ryby","Vejce","Mléčné výrobky","Kuřecí játra"]},
+  {key:"biotin_ug", symbol:"B7", name:"Biotin (B7)", unit:"µg", nrv:50,
+    desc:"Podílí se na metabolismu tuků, bílkovin a sacharidů, podporuje zdraví vlasů, kůže a nehtů.",
+    sources:["Vaječný žloutek","Mandle","Sladké brambory","Špenát","Losos"]},
+  {key:"vitB5_mg", symbol:"B5", name:"Kys. pantothenová (B5)", unit:"mg", nrv:6,
+    desc:"Účastní se tvorby energie a syntézy hormonů a cholesterolu.",
+    sources:["Houby","Avokádo","Kuřecí maso","Celozrnné obiloviny","Brokolice"]},
+];
+
+const MINERALS = [
+  {key:"draslik_mg", symbol:"K", name:"Draslík", unit:"mg", nrv:2000,
+    desc:"Reguluje vodní hospodářství, krevní tlak a nervosvalový přenos, důležitý pro správnou činnost srdce.",
+    sources:["Banán","Brambory","Avokádo","Špenát","Fazole"]},
+  {key:"chlor_mg", symbol:"Cl", name:"Chlor", unit:"mg", nrv:800,
+    desc:"Spolu se sodíkem udržuje rovnováhu tekutin a je součástí žaludeční kyseliny potřebné k trávení.",
+    sources:["Mořské řasy","Celer","Rajčata","Olivy","Sardinky"]},
+  {key:"vapnik_mg", symbol:"Ca", name:"Vápník", unit:"mg", nrv:800,
+    desc:"Základní stavební prvek kostí a zubů, podílí se na svalové kontrakci a srážení krve.",
+    sources:["Mléčné výrobky","Sezamová semínka","Kapusta","Mandle","Sardinky (s kostmi)"]},
+  {key:"fosfor_mg", symbol:"P", name:"Fosfor", unit:"mg", nrv:700,
+    desc:"Spolu s vápníkem tvoří kosti a zuby, je součástí buněčných membrán a energetických molekul (ATP).",
+    sources:["Ryby","Mléčné výrobky","Luštěniny","Ořechy","Celozrnné obiloviny"]},
+  {key:"horcik_mg", symbol:"Mg", name:"Hořčík", unit:"mg", nrv:375,
+    desc:"Podílí se na stovkách enzymatických reakcí, funkci svalů a nervů a přispívá k psychické pohodě a spánku.",
+    sources:["Mandle","Špenát","Dýňová semínka","Černé fazole","Avokádo"]},
+  {key:"zelezo_mg", symbol:"Fe", name:"Železo", unit:"mg", nrv:14,
+    desc:"Nezbytné pro tvorbu hemoglobinu, který přenáší kyslík v krvi; nedostatek vede k únavě a chudokrevnosti.",
+    sources:["Červené maso","Čočka","Špenát","Dýňová semínka","Quinoa"]},
+  {key:"zinek_mg", symbol:"Zn", name:"Zinek", unit:"mg", nrv:10,
+    desc:"Podporuje imunitní systém a hojení ran a je důležitý pro smysl chuti a čichu.",
+    sources:["Hovězí maso","Dýňová semínka","Cizrna","Kešu","Vejce"]},
+  {key:"med_mg", symbol:"Cu", name:"Měď", unit:"mg", nrv:1,
+    desc:"Podílí se na tvorbě pojivové tkáně a červených krvinek a na ochraně buněk před oxidačním stresem.",
+    sources:["Kešu","Čočka","Hovězí játra","Tmavá čokoláda (vysoký % kakaa)","Sezamová semínka"]},
+  {key:"mangan_mg", symbol:"Mn", name:"Mangan", unit:"mg", nrv:2,
+    desc:"Účastní se metabolismu kostí a sacharidů a antioxidační ochrany buněk.",
+    sources:["Celozrnné obiloviny","Mandle","Špenát","Ananas","Luštěniny"]},
+  {key:"fluor_mg", symbol:"F", name:"Fluor", unit:"mg", nrv:3.5,
+    desc:"Přispívá k odolnosti zubní skloviny proti kazu.",
+    sources:["Černý a zelený čaj","Ryby s kostmi","Hroznový džus","Brambory","Hroznové víno"]},
+  {key:"selen_ug", symbol:"Se", name:"Selen", unit:"µg", nrv:55,
+    desc:"Antioxidant, podporuje funkci štítné žlázy a imunitního systému.",
+    sources:["Para ořechy","Tuňák","Vejce","Slunečnicová semínka","Celozrnné obiloviny"]},
+  {key:"chrom_ug", symbol:"Cr", name:"Chrom", unit:"µg", nrv:40,
+    desc:"Podílí se na metabolismu sacharidů a citlivosti buněk na inzulin.",
+    sources:["Brokolice","Celozrnné obiloviny","Hroznové víno","Brambory","Libové maso"]},
+  {key:"molybden_ug", symbol:"Mo", name:"Molybden", unit:"µg", nrv:50,
+    desc:"Součást enzymů podílejících se na zpracování aminokyselin a odbourávání škodlivých látek.",
+    sources:["Luštěniny","Celozrnné obiloviny","Ořechy","Listová zelenina","Mléčné výrobky"]},
+  {key:"jod_ug", symbol:"I", name:"Jód", unit:"µg", nrv:150,
+    desc:"Nezbytný pro tvorbu hormonů štítné žlázy, které řídí metabolismus.",
+    sources:["Mořské řasy","Ryby","Mléčné výrobky","Vejce","Krevety"]},
+];
+
+/* ---------- local food database (per 100 g) — no AI, no internet needed ---------- */
+const FOODS = [
+  {name:"Vejce (celé)", group:"Bílkoviny", portion_g:100, portion_label:"2 vejce (100 g)",
+    kcal:155, fat_g:11, carbs_g:1.1, sugar_g:1.1, protein_g:13,
+    vitamins:{vitA_ug:160,vitD_ug:2,vitE_mg:1,vitK_ug:0.3,vitC_mg:0,vitB1_mg:0.07,vitB2_mg:0.46,vitB3_mg:0.1,vitB6_mg:0.17,vitB9_ug:47,vitB12_ug:0.9,biotin_ug:20,vitB5_mg:1.4},
+    minerals:{draslik_mg:138,chlor_mg:0,vapnik_mg:56,fosfor_mg:198,horcik_mg:12,zelezo_mg:1.8,zinek_mg:1.3,med_mg:0.07,mangan_mg:0.03,fluor_mg:0,selen_ug:30,chrom_ug:0,molybden_ug:0,jod_ug:24}},
+  {name:"Kuřecí prsa (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:165, fat_g:3.6, carbs_g:0, sugar_g:0, protein_g:31,
+    vitamins:{vitB3_mg:13,vitB6_mg:0.6,vitB12_ug:0.3},
+    minerals:{fosfor_mg:210,draslik_mg:256,selen_ug:24,zinek_mg:1}},
+  {name:"Hovězí maso libové (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:250, fat_g:15, carbs_g:0, sugar_g:0, protein_g:26,
+    vitamins:{vitB12_ug:2.6,vitB3_mg:4.8},
+    minerals:{zelezo_mg:2.6,zinek_mg:6.3,selen_ug:26}},
+  {name:"Vepřové maso libové (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:242, fat_g:14, carbs_g:0, sugar_g:0, protein_g:27,
+    vitamins:{vitB1_mg:0.7},
+    minerals:{zinek_mg:2.9,selen_ug:44}},
+  {name:"Krůtí maso (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:189, fat_g:7.4, carbs_g:0, sugar_g:0, protein_g:29,
+    vitamins:{vitB3_mg:6,vitB6_mg:0.5},
+    minerals:{zinek_mg:2.5}},
+  {name:"Losos (vařený)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:208, fat_g:13, carbs_g:0, sugar_g:0, protein_g:20,
+    vitamins:{vitD_ug:11,vitB12_ug:2.8,vitB3_mg:8.5,vitB6_mg:0.6},
+    minerals:{selen_ug:36,draslik_mg:384}},
+  {name:"Tuňák (konzerva ve vodě)", group:"Bílkoviny", portion_g:100, portion_label:"1 konzerva (100 g)",
+    kcal:116, fat_g:1, carbs_g:0, sugar_g:0, protein_g:26,
+    vitamins:{vitB3_mg:12,vitB12_ug:2.9},
+    minerals:{selen_ug:80,draslik_mg:260}},
+  {name:"Sardinky v oleji", group:"Bílkoviny", portion_g:100, portion_label:"1 konzerva (100 g)",
+    kcal:208, fat_g:11.5, carbs_g:0, sugar_g:0, protein_g:25,
+    vitamins:{vitD_ug:4.8,vitB12_ug:8.9},
+    minerals:{vapnik_mg:382,selen_ug:53,draslik_mg:397}},
+  {name:"Rýže bílá (vařená)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:130, fat_g:0.3, carbs_g:28, sugar_g:0.1, protein_g:2.4,
+    vitamins:{}, minerals:{mangan_mg:0.4}},
+  {name:"Quinoa (vařená)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:120, fat_g:1.9, carbs_g:21, sugar_g:0.9, protein_g:4.4,
+    vitamins:{}, minerals:{horcik_mg:64,zelezo_mg:1.5,mangan_mg:0.6,fosfor_mg:152}},
+  {name:"Ovesné vločky (syrové)", group:"Přílohy a obiloviny", portion_g:50, portion_label:"1 miska (50 g)",
+    kcal:389, fat_g:6.9, carbs_g:66, sugar_g:1, protein_g:17,
+    vitamins:{vitB1_mg:0.76}, minerals:{horcik_mg:177,zelezo_mg:4.7,mangan_mg:4.9,zinek_mg:4}},
+  {name:"Celozrnný chléb", group:"Přílohy a obiloviny", portion_g:60, portion_label:"2 krajíce (60 g)",
+    kcal:247, fat_g:3.4, carbs_g:41, sugar_g:4.3, protein_g:13,
+    vitamins:{}, minerals:{horcik_mg:82,selen_ug:28,mangan_mg:2.5}},
+  {name:"Brambory (vařené)", group:"Přílohy a obiloviny", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:87, fat_g:0.1, carbs_g:20, sugar_g:0.8, protein_g:1.9,
+    vitamins:{vitC_mg:13,vitB6_mg:0.3}, minerals:{draslik_mg:379}},
+  {name:"Sladké brambory (pečené)", group:"Přílohy a obiloviny", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:90, fat_g:0.2, carbs_g:21, sugar_g:6.5, protein_g:2,
+    vitamins:{vitA_ug:961,vitC_mg:19.6}, minerals:{draslik_mg:337}},
+  {name:"Čočka (vařená)", group:"Luštěniny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:116, fat_g:0.4, carbs_g:20, sugar_g:1.8, protein_g:9,
+    vitamins:{vitB9_ug:181}, minerals:{zelezo_mg:3.3,draslik_mg:369,horcik_mg:36,zinek_mg:1.3}},
+  {name:"Cizrna (vařená)", group:"Luštěniny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:164, fat_g:2.6, carbs_g:27, sugar_g:4.8, protein_g:9,
+    vitamins:{vitB9_ug:172,vitB6_mg:0.14}, minerals:{zelezo_mg:2.9,horcik_mg:48,draslik_mg:291}},
+  {name:"Černé fazole (vařené)", group:"Luštěniny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:132, fat_g:0.5, carbs_g:24, sugar_g:0.3, protein_g:8.9,
+    vitamins:{vitB9_ug:149}, minerals:{horcik_mg:70,zelezo_mg:2.1,draslik_mg:355}},
+  {name:"Brokolice (vařená)", group:"Zelenina", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:35, fat_g:0.4, carbs_g:7, sugar_g:1.4, protein_g:2.4,
+    vitamins:{vitC_mg:65,vitK_ug:102,vitB9_ug:108}, minerals:{draslik_mg:293}},
+  {name:"Špenát (syrový)", group:"Zelenina", portion_g:80, portion_label:"1 hrst (80 g)",
+    kcal:23, fat_g:0.4, carbs_g:3.6, sugar_g:0.4, protein_g:2.9,
+    vitamins:{vitA_ug:469,vitK_ug:483,vitB9_ug:194,vitC_mg:28}, minerals:{zelezo_mg:2.7,horcik_mg:79,draslik_mg:558,mangan_mg:0.9}},
+  {name:"Kapusta (vařená)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:28, fat_g:0.4, carbs_g:6, sugar_g:1.3, protein_g:2,
+    vitamins:{vitK_ug:704,vitA_ug:500,vitC_mg:41}, minerals:{vapnik_mg:72,draslik_mg:228}},
+  {name:"Růžičková kapusta (vařená)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:36, fat_g:0.3, carbs_g:7, sugar_g:1.9, protein_g:2.6,
+    vitamins:{vitC_mg:62,vitK_ug:140,vitB9_ug:61}, minerals:{}},
+  {name:"Mrkev (syrová)", group:"Zelenina", portion_g:80, portion_label:"1 kus (80 g)",
+    kcal:41, fat_g:0.2, carbs_g:10, sugar_g:4.7, protein_g:0.9,
+    vitamins:{vitA_ug:835,vitK_ug:13}, minerals:{draslik_mg:320}},
+  {name:"Paprika červená", group:"Zelenina", portion_g:120, portion_label:"1 kus (120 g)",
+    kcal:31, fat_g:0.3, carbs_g:6, sugar_g:4.2, protein_g:1,
+    vitamins:{vitC_mg:128,vitA_ug:157,vitB6_mg:0.29}, minerals:{}},
+  {name:"Rajče", group:"Zelenina", portion_g:120, portion_label:"1 kus (120 g)",
+    kcal:18, fat_g:0.2, carbs_g:3.9, sugar_g:2.6, protein_g:0.9,
+    vitamins:{vitC_mg:14,vitK_ug:7.9}, minerals:{draslik_mg:237}},
+  {name:"Okurka", group:"Zelenina", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:15, fat_g:0.1, carbs_g:3.6, sugar_g:1.7, protein_g:0.7,
+    vitamins:{vitK_ug:16}, minerals:{draslik_mg:147}},
+  {name:"Chřest (vařený)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:22, fat_g:0.2, carbs_g:4.1, sugar_g:1.9, protein_g:2.4,
+    vitamins:{vitB9_ug:52,vitK_ug:41}, minerals:{draslik_mg:202}},
+  {name:"Houby žampiony", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:22, fat_g:0.3, carbs_g:3.3, sugar_g:2, protein_g:3.1,
+    vitamins:{vitB2_mg:0.4,vitB3_mg:3.6,vitB5_mg:1.5}, minerals:{selen_ug:9,draslik_mg:318}},
+  {name:"Avokádo", group:"Zelenina", portion_g:100, portion_label:"1/2 kusu (100 g)",
+    kcal:160, fat_g:15, carbs_g:9, sugar_g:0.7, protein_g:2,
+    vitamins:{vitK_ug:21,vitB9_ug:81,vitE_mg:2.1,vitC_mg:10}, minerals:{draslik_mg:485}},
+  {name:"Banán", group:"Ovoce", portion_g:120, portion_label:"1 kus (120 g)",
+    kcal:89, fat_g:0.3, carbs_g:23, sugar_g:12, protein_g:1.1,
+    vitamins:{vitB6_mg:0.4,vitC_mg:8.7}, minerals:{draslik_mg:358,horcik_mg:27}},
+  {name:"Jablko", group:"Ovoce", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:52, fat_g:0.2, carbs_g:14, sugar_g:10, protein_g:0.3,
+    vitamins:{vitC_mg:4.6}, minerals:{draslik_mg:107}},
+  {name:"Jahody", group:"Ovoce", portion_g:150, portion_label:"1 hrst (150 g)",
+    kcal:33, fat_g:0.3, carbs_g:8, sugar_g:4.9, protein_g:0.7,
+    vitamins:{vitC_mg:59}, minerals:{mangan_mg:0.4,draslik_mg:153}},
+  {name:"Kiwi", group:"Ovoce", portion_g:75, portion_label:"1 kus (75 g)",
+    kcal:61, fat_g:0.5, carbs_g:15, sugar_g:9, protein_g:1.1,
+    vitamins:{vitC_mg:93,vitK_ug:40}, minerals:{draslik_mg:312}},
+  {name:"Pomeranč", group:"Ovoce", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:47, fat_g:0.1, carbs_g:12, sugar_g:9.4, protein_g:0.9,
+    vitamins:{vitC_mg:53,vitB9_ug:30}, minerals:{draslik_mg:181}},
+  {name:"Ananas", group:"Ovoce", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:50, fat_g:0.1, carbs_g:13, sugar_g:10, protein_g:0.5,
+    vitamins:{vitC_mg:47.8}, minerals:{mangan_mg:0.9}},
+  {name:"Hroznové víno", group:"Ovoce", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:69, fat_g:0.2, carbs_g:18, sugar_g:16, protein_g:0.7,
+    vitamins:{vitK_ug:14.6}, minerals:{draslik_mg:191}},
+  {name:"Mandle", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:579, fat_g:50, carbs_g:22, sugar_g:4.4, protein_g:21,
+    vitamins:{vitE_mg:25.6,vitB2_mg:1.1}, minerals:{horcik_mg:270,vapnik_mg:269,zelezo_mg:3.7,zinek_mg:3.1}},
+  {name:"Vlašské ořechy", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:654, fat_g:65, carbs_g:14, sugar_g:2.6, protein_g:15,
+    vitamins:{vitB6_mg:0.5}, minerals:{horcik_mg:158,med_mg:1.6,mangan_mg:3.4}},
+  {name:"Kešu ořechy", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:553, fat_g:44, carbs_g:30, sugar_g:5.9, protein_g:18,
+    vitamins:{}, minerals:{med_mg:2.2,horcik_mg:292,zinek_mg:5.8,zelezo_mg:6.7}},
+  {name:"Para ořechy", group:"Ořechy a semínka", portion_g:15, portion_label:"3 kusy (15 g)",
+    kcal:656, fat_g:66, carbs_g:12, sugar_g:2.3, protein_g:14,
+    vitamins:{}, minerals:{selen_ug:1917,horcik_mg:376,med_mg:1.7}},
+  {name:"Dýňová semínka", group:"Ořechy a semínka", portion_g:25, portion_label:"2 lžíce (25 g)",
+    kcal:559, fat_g:49, carbs_g:11, sugar_g:1.4, protein_g:30,
+    vitamins:{}, minerals:{horcik_mg:592,zinek_mg:7.8,zelezo_mg:8.8,med_mg:1.3,mangan_mg:4.5}},
+  {name:"Slunečnicová semínka", group:"Ořechy a semínka", portion_g:25, portion_label:"2 lžíce (25 g)",
+    kcal:584, fat_g:51, carbs_g:20, sugar_g:2.6, protein_g:21,
+    vitamins:{vitE_mg:35,vitB1_mg:1.5}, minerals:{selen_ug:53,horcik_mg:325}},
+  {name:"Sezamová semínka", group:"Ořechy a semínka", portion_g:15, portion_label:"1 lžíce (15 g)",
+    kcal:573, fat_g:50, carbs_g:23, sugar_g:0.3, protein_g:18,
+    vitamins:{}, minerals:{vapnik_mg:975,zelezo_mg:14.6,horcik_mg:351,zinek_mg:7.8,med_mg:4.1}},
+  {name:"Olivový olej", group:"Tuky", portion_g:14, portion_label:"1 lžíce (14 g)",
+    kcal:884, fat_g:100, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{vitE_mg:14,vitK_ug:60}, minerals:{}},
+  {name:"Mléko polotučné", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:47, fat_g:1.5, carbs_g:4.8, sugar_g:4.8, protein_g:3.4,
+    vitamins:{vitB2_mg:0.18,vitB12_ug:0.4}, minerals:{vapnik_mg:120,fosfor_mg:95,draslik_mg:150}},
+  {name:"Bílý jogurt (bez cukru)", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:61, fat_g:3.3, carbs_g:4.7, sugar_g:4.7, protein_g:3.5,
+    vitamins:{vitB2_mg:0.14,vitB12_ug:0.37}, minerals:{vapnik_mg:121}},
+  {name:"Tvaroh", group:"Mléčné výrobky", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:98, fat_g:4.3, carbs_g:3.4, sugar_g:2.7, protein_g:11,
+    vitamins:{vitB12_ug:0.4}, minerals:{vapnik_mg:83}},
+  {name:"Sýr eidam", group:"Mléčné výrobky", portion_g:30, portion_label:"2 plátky (30 g)",
+    kcal:357, fat_g:28, carbs_g:1.4, sugar_g:1.4, protein_g:25,
+    vitamins:{vitB12_ug:1.8}, minerals:{vapnik_mg:850,fosfor_mg:550,zinek_mg:4}},
+  {name:"Tmavá čokoláda (70 %)", group:"Ostatní", portion_g:20, portion_label:"2 kostky (20 g)",
+    kcal:598, fat_g:43, carbs_g:46, sugar_g:24, protein_g:7.8,
+    vitamins:{}, minerals:{horcik_mg:228,zelezo_mg:11.9,med_mg:1.8,mangan_mg:1.9}},
+  {name:"Mořské řasy (nori, sušené)", group:"Ostatní", portion_g:3, portion_label:"1 list (3 g)",
+    kcal:349, fat_g:3.7, carbs_g:44, sugar_g:0.6, protein_g:41,
+    vitamins:{}, minerals:{jod_ug:1500}},
+
+  /* --- Bobule --- */
+  {name:"Borůvky", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:57, fat_g:0.3, carbs_g:14, sugar_g:10, protein_g:0.7,
+    vitamins:{vitC_mg:9.7,vitK_ug:19}, minerals:{mangan_mg:0.3}},
+  {name:"Maliny", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:52, fat_g:0.7, carbs_g:12, sugar_g:4.4, protein_g:1.2,
+    vitamins:{vitC_mg:26.2,vitK_ug:7.8}, minerals:{mangan_mg:0.7}},
+  {name:"Ostružiny", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:43, fat_g:0.5, carbs_g:10, sugar_g:4.9, protein_g:1.4,
+    vitamins:{vitC_mg:21,vitK_ug:19.8}, minerals:{mangan_mg:0.6}},
+  {name:"Brusinky", group:"Bobule", portion_g:80, portion_label:"1 hrst (80 g)",
+    kcal:46, fat_g:0.1, carbs_g:12, sugar_g:4, protein_g:0.4,
+    vitamins:{vitC_mg:13.3}, minerals:{}},
+  {name:"Červený rybíz", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:56, fat_g:0.2, carbs_g:14, sugar_g:7, protein_g:1.4,
+    vitamins:{vitC_mg:41}, minerals:{}},
+  {name:"Černý rybíz", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:63, fat_g:0.4, carbs_g:15, sugar_g:8, protein_g:1.4,
+    vitamins:{vitC_mg:181}, minerals:{draslik_mg:322}},
+  {name:"Angrešt", group:"Bobule", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:44, fat_g:0.6, carbs_g:10, sugar_g:9, protein_g:0.9,
+    vitamins:{vitC_mg:27.7}, minerals:{}},
+
+  /* --- Pečivo --- */
+  {name:"Žitný chléb", group:"Pečivo", portion_g:60, portion_label:"2 krajíce (60 g)",
+    kcal:259, fat_g:1.3, carbs_g:48, sugar_g:4, protein_g:8.5,
+    vitamins:{vitB1_mg:0.15,vitB3_mg:1.8}, minerals:{horcik_mg:40,zelezo_mg:2.1,mangan_mg:1.1,fosfor_mg:100}},
+  {name:"Celozrnný chléb (typu Lidl)", group:"Pečivo", portion_g:60, portion_label:"2 krajíce (60 g)",
+    kcal:246, fat_g:3.3, carbs_g:41, sugar_g:3.5, protein_g:9.5,
+    vitamins:{vitB1_mg:0.2,vitB3_mg:3.5}, minerals:{horcik_mg:65,zelezo_mg:2.5,mangan_mg:1.8,fosfor_mg:180}},
+  {name:"Bílý chléb (toustový)", group:"Pečivo", portion_g:60, portion_label:"2 krajíce (60 g)",
+    kcal:265, fat_g:3.3, carbs_g:49, sugar_g:5, protein_g:9,
+    vitamins:{vitB1_mg:0.1,vitB3_mg:2}, minerals:{vapnik_mg:30,zelezo_mg:1.3,horcik_mg:20}},
+  {name:"Houska", group:"Pečivo", portion_g:70, portion_label:"1 kus (70 g)",
+    kcal:280, fat_g:3.5, carbs_g:52, sugar_g:4, protein_g:9,
+    vitamins:{vitB1_mg:0.12}, minerals:{horcik_mg:25,zelezo_mg:1.5,vapnik_mg:20}},
+  {name:"Celozrnná houska", group:"Pečivo", portion_g:70, portion_label:"1 kus (70 g)",
+    kcal:255, fat_g:4, carbs_g:44, sugar_g:3, protein_g:10,
+    vitamins:{vitB1_mg:0.22}, minerals:{horcik_mg:60,zelezo_mg:2.4,mangan_mg:1.6}},
+  {name:"Rohlík", group:"Pečivo", portion_g:43, portion_label:"1 kus (43 g)",
+    kcal:290, fat_g:4, carbs_g:54, sugar_g:3, protein_g:8.5,
+    vitamins:{vitB1_mg:0.11}, minerals:{horcik_mg:22,zelezo_mg:1.4,vapnik_mg:18}},
+  {name:"Celozrnný rohlík", group:"Pečivo", portion_g:43, portion_label:"1 kus (43 g)",
+    kcal:265, fat_g:4.2, carbs_g:46, sugar_g:2.5, protein_g:9.5,
+    vitamins:{vitB1_mg:0.2}, minerals:{horcik_mg:55,zelezo_mg:2.2,mangan_mg:1.5}},
+  {name:"Celozrnná bageta", group:"Pečivo", portion_g:80, portion_label:"1 porce (80 g)",
+    kcal:250, fat_g:2.5, carbs_g:47, sugar_g:3, protein_g:10,
+    vitamins:{vitB1_mg:0.2}, minerals:{horcik_mg:60,zelezo_mg:2.2,mangan_mg:1.5}},
+  {name:"Tortilla (pšeničná)", group:"Pečivo", portion_g:50, portion_label:"1 kus (50 g)",
+    kcal:310, fat_g:7, carbs_g:50, sugar_g:2, protein_g:8,
+    vitamins:{}, minerals:{horcik_mg:25,zelezo_mg:1.8,vapnik_mg:80}},
+  {name:"Žitný knäckebrot", group:"Pečivo", portion_g:20, portion_label:"2 kusy (20 g)",
+    kcal:360, fat_g:1.5, carbs_g:73, sugar_g:2, protein_g:9,
+    vitamins:{vitB1_mg:0.3}, minerals:{horcik_mg:90,zelezo_mg:3,mangan_mg:2.5}},
+  {name:"Croissant", group:"Pečivo", portion_g:60, portion_label:"1 kus (60 g)",
+    kcal:406, fat_g:21, carbs_g:46, sugar_g:10, protein_g:8,
+    vitamins:{vitA_ug:90}, minerals:{vapnik_mg:40,horcik_mg:15}},
+  {name:"Bagel", group:"Pečivo", portion_g:90, portion_label:"1 kus (90 g)",
+    kcal:257, fat_g:1.5, carbs_g:50, sugar_g:5, protein_g:10,
+    vitamins:{}, minerals:{zelezo_mg:2.5,horcik_mg:25}},
+  {name:"Pita chléb", group:"Pečivo", portion_g:60, portion_label:"1 kus (60 g)",
+    kcal:275, fat_g:1.2, carbs_g:56, sugar_g:2, protein_g:9,
+    vitamins:{}, minerals:{horcik_mg:25,zelezo_mg:1.6}},
+
+  /* --- Bílkoviny (maso navíc) --- */
+  {name:"Kuřecí stehno (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:215, fat_g:11, carbs_g:0, sugar_g:0, protein_g:27,
+    vitamins:{vitB3_mg:5}, minerals:{zinek_mg:2.6}},
+  {name:"Krůtí prsa (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:135, fat_g:1, carbs_g:0, sugar_g:0, protein_g:30,
+    vitamins:{vitB3_mg:8}, minerals:{selen_ug:30}},
+  {name:"Jehněčí maso (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:294, fat_g:21, carbs_g:0, sugar_g:0, protein_g:25,
+    vitamins:{vitB12_ug:2.6}, minerals:{zelezo_mg:1.9,zinek_mg:4.5}},
+  {name:"Králičí maso (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:173, fat_g:7, carbs_g:0, sugar_g:0, protein_g:29,
+    vitamins:{vitB12_ug:6}, minerals:{selen_ug:23}},
+  {name:"Kachní maso (vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:337, fat_g:28, carbs_g:0, sugar_g:0, protein_g:19,
+    vitamins:{}, minerals:{zelezo_mg:2.7}},
+  {name:"Slanina", group:"Bílkoviny", portion_g:20, portion_label:"2 plátky (20 g)",
+    kcal:541, fat_g:42, carbs_g:1.4, sugar_g:0, protein_g:37,
+    vitamins:{}, minerals:{}},
+  {name:"Šunka (libová)", group:"Bílkoviny", portion_g:40, portion_label:"2 plátky (40 g)",
+    kcal:107, fat_g:3.5, carbs_g:1.5, sugar_g:1, protein_g:17,
+    vitamins:{}, minerals:{}},
+  {name:"Salám", group:"Bílkoviny", portion_g:30, portion_label:"pár plátků (30 g)",
+    kcal:300, fat_g:25, carbs_g:2, sugar_g:1, protein_g:16,
+    vitamins:{}, minerals:{}},
+  {name:"Klobása", group:"Bílkoviny", portion_g:80, portion_label:"1 kus (80 g)",
+    kcal:320, fat_g:28, carbs_g:2, sugar_g:1, protein_g:13,
+    vitamins:{}, minerals:{}},
+  {name:"Mleté hovězí (libové, vařené)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:215, fat_g:12, carbs_g:0, sugar_g:0, protein_g:24,
+    vitamins:{}, minerals:{zelezo_mg:2.5,zinek_mg:5}},
+  {name:"Vepřová panenka (vařená)", group:"Bílkoviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:143, fat_g:3.5, carbs_g:0, sugar_g:0, protein_g:27,
+    vitamins:{vitB1_mg:0.9}, minerals:{}},
+  {name:"Kuřecí játra (vařená)", group:"Bílkoviny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:167, fat_g:4.8, carbs_g:1, sugar_g:0, protein_g:25,
+    vitamins:{vitA_ug:3296,vitB12_ug:16.6,vitB9_ug:588}, minerals:{zelezo_mg:9}},
+  {name:"Vaječný bílek", group:"Bílkoviny", portion_g:33, portion_label:"1 bílek (33 g)",
+    kcal:52, fat_g:0.2, carbs_g:0.7, sugar_g:0.7, protein_g:11,
+    vitamins:{}, minerals:{draslik_mg:163}},
+  {name:"Vejce křepelčí", group:"Bílkoviny", portion_g:40, portion_label:"4 kusy (40 g)",
+    kcal:158, fat_g:11, carbs_g:0.4, sugar_g:0.4, protein_g:13,
+    vitamins:{vitB12_ug:1.6}, minerals:{}},
+  {name:"Seitan", group:"Bílkoviny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:370, fat_g:1.9, carbs_g:14, sugar_g:1, protein_g:75,
+    vitamins:{}, minerals:{}},
+
+  /* --- Ovoce navíc --- */
+  {name:"Hruška", group:"Ovoce", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:57, fat_g:0.1, carbs_g:15, sugar_g:10, protein_g:0.4,
+    vitamins:{}, minerals:{draslik_mg:116}},
+  {name:"Meruňka", group:"Ovoce", portion_g:100, portion_label:"3 kusy (100 g)",
+    kcal:48, fat_g:0.4, carbs_g:11, sugar_g:9, protein_g:1.4,
+    vitamins:{vitA_ug:96,vitC_mg:10}, minerals:{}},
+  {name:"Broskev", group:"Ovoce", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:39, fat_g:0.3, carbs_g:10, sugar_g:8.4, protein_g:0.9,
+    vitamins:{vitC_mg:6.6}, minerals:{}},
+  {name:"Švestka", group:"Ovoce", portion_g:100, portion_label:"3 kusy (100 g)",
+    kcal:46, fat_g:0.3, carbs_g:11, sugar_g:10, protein_g:0.7,
+    vitamins:{vitC_mg:9.5,vitK_ug:6.4}, minerals:{}},
+  {name:"Třešně", group:"Ovoce", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:63, fat_g:0.2, carbs_g:16, sugar_g:13, protein_g:1.1,
+    vitamins:{vitC_mg:7}, minerals:{draslik_mg:222}},
+  {name:"Mango", group:"Ovoce", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:60, fat_g:0.4, carbs_g:15, sugar_g:14, protein_g:0.8,
+    vitamins:{vitA_ug:54,vitC_mg:36.4}, minerals:{}},
+  {name:"Papája", group:"Ovoce", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:43, fat_g:0.3, carbs_g:11, sugar_g:8, protein_g:0.5,
+    vitamins:{vitA_ug:47,vitC_mg:61}, minerals:{}},
+  {name:"Grep", group:"Ovoce", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:42, fat_g:0.1, carbs_g:11, sugar_g:7, protein_g:0.8,
+    vitamins:{vitA_ug:58,vitC_mg:31}, minerals:{}},
+  {name:"Citron", group:"Ovoce", portion_g:60, portion_label:"1 kus (60 g)",
+    kcal:29, fat_g:0.3, carbs_g:9, sugar_g:2.5, protein_g:1.1,
+    vitamins:{vitC_mg:53}, minerals:{}},
+  {name:"Limetka", group:"Ovoce", portion_g:60, portion_label:"1 kus (60 g)",
+    kcal:30, fat_g:0.2, carbs_g:11, sugar_g:1.7, protein_g:0.7,
+    vitamins:{vitC_mg:29.1}, minerals:{}},
+  {name:"Granátové jablko", group:"Ovoce", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:83, fat_g:1.2, carbs_g:19, sugar_g:14, protein_g:1.7,
+    vitamins:{vitC_mg:10.2,vitK_ug:16.4}, minerals:{}},
+  {name:"Fíky (čerstvé)", group:"Ovoce", portion_g:100, portion_label:"2 kusy (100 g)",
+    kcal:74, fat_g:0.3, carbs_g:19, sugar_g:16, protein_g:0.8,
+    vitamins:{}, minerals:{draslik_mg:232,vapnik_mg:35}},
+  {name:"Datle (sušené)", group:"Ovoce", portion_g:30, portion_label:"3 kusy (30 g)",
+    kcal:277, fat_g:0.2, carbs_g:75, sugar_g:63, protein_g:1.8,
+    vitamins:{}, minerals:{draslik_mg:696,horcik_mg:54}},
+  {name:"Rozinky", group:"Ovoce", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:299, fat_g:0.5, carbs_g:79, sugar_g:59, protein_g:3.1,
+    vitamins:{}, minerals:{draslik_mg:749,zelezo_mg:1.9}},
+  {name:"Meloun vodní", group:"Ovoce", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:30, fat_g:0.2, carbs_g:8, sugar_g:6, protein_g:0.6,
+    vitamins:{vitA_ug:28,vitC_mg:8.1}, minerals:{}},
+  {name:"Meloun žlutý", group:"Ovoce", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:34, fat_g:0.2, carbs_g:8, sugar_g:8, protein_g:0.8,
+    vitamins:{vitA_ug:169,vitC_mg:36.7}, minerals:{}},
+  {name:"Liči", group:"Ovoce", portion_g:100, portion_label:"1 hrst (100 g)",
+    kcal:66, fat_g:0.4, carbs_g:17, sugar_g:15, protein_g:0.8,
+    vitamins:{vitC_mg:71.5}, minerals:{}},
+  {name:"Mandarinka", group:"Ovoce", portion_g:100, portion_label:"1 kus (100 g)",
+    kcal:53, fat_g:0.3, carbs_g:13, sugar_g:10.6, protein_g:0.8,
+    vitamins:{vitA_ug:34,vitC_mg:26.7}, minerals:{}},
+  {name:"Guava", group:"Ovoce", portion_g:100, portion_label:"1 kus (100 g)",
+    kcal:68, fat_g:1, carbs_g:14, sugar_g:9, protein_g:2.6,
+    vitamins:{vitC_mg:228}, minerals:{}},
+  {name:"Tomel (persimmon)", group:"Ovoce", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:70, fat_g:0.2, carbs_g:19, sugar_g:13, protein_g:0.6,
+    vitamins:{vitA_ug:81,vitC_mg:7.5}, minerals:{}},
+
+  /* --- Müsli a cereálie --- */
+  {name:"Müsli klasické", group:"Müsli a cereálie", portion_g:50, portion_label:"1 miska (50 g)",
+    kcal:362, fat_g:6, carbs_g:68, sugar_g:18, protein_g:9,
+    vitamins:{}, minerals:{}},
+  {name:"Granola", group:"Müsli a cereálie", portion_g:50, portion_label:"1 miska (50 g)",
+    kcal:471, fat_g:20, carbs_g:64, sugar_g:21, protein_g:10,
+    vitamins:{}, minerals:{horcik_mg:120}},
+  {name:"Cornflakes", group:"Müsli a cereálie", portion_g:30, portion_label:"1 miska (30 g)",
+    kcal:378, fat_g:0.9, carbs_g:84, sugar_g:8, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Müsli s ořechy a semínky", group:"Müsli a cereálie", portion_g:50, portion_label:"1 miska (50 g)",
+    kcal:450, fat_g:18, carbs_g:58, sugar_g:15, protein_g:12,
+    vitamins:{}, minerals:{}},
+  {name:"Ovesné otruby", group:"Müsli a cereálie", portion_g:30, portion_label:"3 lžíce (30 g)",
+    kcal:246, fat_g:7, carbs_g:66, sugar_g:1, protein_g:17,
+    vitamins:{}, minerals:{horcik_mg:235,zelezo_mg:5.4}},
+
+  /* --- Mléčné výrobky navíc --- */
+  {name:"Řecký jogurt (bílý)", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:97, fat_g:5, carbs_g:4, sugar_g:4, protein_g:9,
+    vitamins:{vitB12_ug:0.5}, minerals:{vapnik_mg:111}},
+  {name:"Kefír", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:41, fat_g:1, carbs_g:4.8, sugar_g:4.8, protein_g:3.4,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Smetana ke šlehání", group:"Mléčné výrobky", portion_g:30, portion_label:"2 lžíce (30 ml)",
+    kcal:292, fat_g:30, carbs_g:3, sugar_g:3, protein_g:2.1,
+    vitamins:{}, minerals:{}},
+  {name:"Máslo", group:"Mléčné výrobky", portion_g:10, portion_label:"1 lžička (10 g)",
+    kcal:717, fat_g:81, carbs_g:0.1, sugar_g:0.1, protein_g:0.9,
+    vitamins:{vitA_ug:684,vitD_ug:0.2,vitE_mg:2.3,vitK_ug:7}, minerals:{vapnik_mg:24,draslik_mg:24,fosfor_mg:23}},
+  {name:"Mozzarella", group:"Mléčné výrobky", portion_g:50, portion_label:"1 porce (50 g)",
+    kcal:280, fat_g:22, carbs_g:2.2, sugar_g:1, protein_g:22,
+    vitamins:{}, minerals:{vapnik_mg:505}},
+  {name:"Parmezán", group:"Mléčné výrobky", portion_g:20, portion_label:"2 lžíce nastrouhané (20 g)",
+    kcal:392, fat_g:29, carbs_g:3.2, sugar_g:0.9, protein_g:35,
+    vitamins:{}, minerals:{vapnik_mg:1184,fosfor_mg:694}},
+  {name:"Plnotučné mléko", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:61, fat_g:3.3, carbs_g:4.8, sugar_g:4.8, protein_g:3.2,
+    vitamins:{}, minerals:{vapnik_mg:113}},
+  {name:"Odstředěné mléko", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:34, fat_g:0.1, carbs_g:5, sugar_g:5, protein_g:3.4,
+    vitamins:{}, minerals:{vapnik_mg:122}},
+  {name:"Ricotta", group:"Mléčné výrobky", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:174, fat_g:13, carbs_g:3, sugar_g:0.3, protein_g:11,
+    vitamins:{}, minerals:{vapnik_mg:207}},
+  {name:"Hermelín", group:"Mléčné výrobky", portion_g:30, portion_label:"1 porce (30 g)",
+    kcal:320, fat_g:26, carbs_g:0.5, sugar_g:0.5, protein_g:20,
+    vitamins:{}, minerals:{vapnik_mg:388}},
+  {name:"Niva (modrý sýr)", group:"Mléčné výrobky", portion_g:30, portion_label:"1 porce (30 g)",
+    kcal:353, fat_g:29, carbs_g:2.3, sugar_g:0.5, protein_g:21,
+    vitamins:{}, minerals:{vapnik_mg:528}},
+  {name:"Žervé (cream cheese)", group:"Mléčné výrobky", portion_g:30, portion_label:"2 lžíce (30 g)",
+    kcal:342, fat_g:34, carbs_g:4, sugar_g:3.2, protein_g:6,
+    vitamins:{}, minerals:{vapnik_mg:98}},
+  {name:"Kokosový jogurt", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:71, fat_g:5, carbs_g:4, sugar_g:3, protein_g:1,
+    vitamins:{}, minerals:{}},
+  {name:"Sójový jogurt", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:51, fat_g:2, carbs_g:4, sugar_g:3, protein_g:3.5,
+    vitamins:{}, minerals:{}},
+  {name:"Kokosové mléko (konzervované)", group:"Mléčné výrobky", portion_g:100, portion_label:"1/2 hrnku (100 ml)",
+    kcal:230, fat_g:24, carbs_g:3, sugar_g:3, protein_g:2.3,
+    vitamins:{}, minerals:{}},
+  {name:"Mandlové mléko (neslazené)", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:17, fat_g:1.5, carbs_g:0.6, sugar_g:0.2, protein_g:0.6,
+    vitamins:{}, minerals:{vapnik_mg:183}},
+  {name:"Sójové mléko (neslazené)", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:33, fat_g:1.8, carbs_g:1.8, sugar_g:1, protein_g:3.3,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Ovesné mléko (neslazené)", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:47, fat_g:1.5, carbs_g:7.5, sugar_g:4, protein_g:1,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+
+  /* --- Ryby a mořské plody --- */
+  {name:"Treska (vařená)", group:"Ryby a mořské plody", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:90, fat_g:0.8, carbs_g:0, sugar_g:0, protein_g:21,
+    vitamins:{vitB12_ug:1}, minerals:{selen_ug:32.5}},
+  {name:"Kapr (pečený)", group:"Ryby a mořské plody", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:162, fat_g:7.6, carbs_g:0, sugar_g:0, protein_g:23,
+    vitamins:{vitB12_ug:1.5}, minerals:{}},
+  {name:"Pstruh (pečený)", group:"Ryby a mořské plody", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:141, fat_g:4.3, carbs_g:0, sugar_g:0, protein_g:24,
+    vitamins:{vitD_ug:5.4,vitB12_ug:5.4}, minerals:{}},
+  {name:"Krevety (vařené)", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:99, fat_g:0.3, carbs_g:0.2, sugar_g:0, protein_g:24,
+    vitamins:{vitB12_ug:1.6}, minerals:{selen_ug:38}},
+  {name:"Mušle", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:172, fat_g:4.5, carbs_g:7, sugar_g:0, protein_g:24,
+    vitamins:{vitB12_ug:24}, minerals:{zelezo_mg:6.7}},
+  {name:"Humr (vařený)", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:89, fat_g:0.9, carbs_g:0, sugar_g:0, protein_g:19,
+    vitamins:{vitB12_ug:2.6}, minerals:{zinek_mg:3.5}},
+  {name:"Losos uzený", group:"Ryby a mořské plody", portion_g:50, portion_label:"pár plátků (50 g)",
+    kcal:117, fat_g:4.3, carbs_g:0, sugar_g:0, protein_g:18,
+    vitamins:{vitD_ug:8,vitB12_ug:4}, minerals:{}},
+  {name:"Makrela", group:"Ryby a mořské plody", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:205, fat_g:14, carbs_g:0, sugar_g:0, protein_g:19,
+    vitamins:{vitD_ug:16.1,vitB12_ug:8.7}, minerals:{}},
+  {name:"Sleď", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:158, fat_g:9.6, carbs_g:0, sugar_g:0, protein_g:18,
+    vitamins:{vitD_ug:20,vitB12_ug:13}, minerals:{}},
+  {name:"Krab (vařený)", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:97, fat_g:1.5, carbs_g:0, sugar_g:0, protein_g:19,
+    vitamins:{vitB12_ug:10}, minerals:{zinek_mg:5.5}},
+  {name:"Chobotnice (vařená)", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:164, fat_g:2.1, carbs_g:4.4, sugar_g:0, protein_g:30,
+    vitamins:{vitB12_ug:20}, minerals:{zelezo_mg:5.3}},
+  {name:"Kalamáry (vařené)", group:"Ryby a mořské plody", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:175, fat_g:7.5, carbs_g:8, sugar_g:0, protein_g:18,
+    vitamins:{vitB12_ug:1.3}, minerals:{med_mg:2}},
+
+  /* --- Luštěniny navíc --- */
+  {name:"Hrách žlutý (vařený)", group:"Luštěniny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:118, fat_g:0.4, carbs_g:21, sugar_g:2.4, protein_g:8,
+    vitamins:{}, minerals:{draslik_mg:244}},
+  {name:"Edamame", group:"Luštěniny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:122, fat_g:5.2, carbs_g:10, sugar_g:2.2, protein_g:11,
+    vitamins:{vitB9_ug:303}, minerals:{zelezo_mg:2.3}},
+  {name:"Sójové boby (vařené)", group:"Luštěniny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:173, fat_g:9, carbs_g:10, sugar_g:3, protein_g:18,
+    vitamins:{}, minerals:{zelezo_mg:5.1,vapnik_mg:102}},
+  {name:"Tofu", group:"Luštěniny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:76, fat_g:4.8, carbs_g:1.9, sugar_g:0.6, protein_g:8,
+    vitamins:{}, minerals:{vapnik_mg:350,zelezo_mg:1.6}},
+  {name:"Tempeh", group:"Luštěniny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:192, fat_g:11, carbs_g:9, sugar_g:0, protein_g:20,
+    vitamins:{}, minerals:{horcik_mg:81,zelezo_mg:2.7}},
+
+  /* --- Zelenina navíc --- */
+  {name:"Cuketa", group:"Zelenina", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:17, fat_g:0.3, carbs_g:3.1, sugar_g:2.5, protein_g:1.2,
+    vitamins:{vitC_mg:17.9}, minerals:{}},
+  {name:"Lilek", group:"Zelenina", portion_g:150, portion_label:"1/2 kusu (150 g)",
+    kcal:25, fat_g:0.2, carbs_g:6, sugar_g:3.5, protein_g:1,
+    vitamins:{}, minerals:{draslik_mg:229}},
+  {name:"Květák (vařený)", group:"Zelenina", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:23, fat_g:0.1, carbs_g:4.1, sugar_g:2, protein_g:1.8,
+    vitamins:{vitC_mg:44}, minerals:{}},
+  {name:"Bílé zelí", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:25, fat_g:0.1, carbs_g:5.8, sugar_g:3.2, protein_g:1.3,
+    vitamins:{vitC_mg:36.6,vitK_ug:76}, minerals:{}},
+  {name:"Kysané zelí", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:19, fat_g:0.1, carbs_g:4.3, sugar_g:1.8, protein_g:0.9,
+    vitamins:{vitC_mg:14.7,vitK_ug:13}, minerals:{}},
+  {name:"Červené zelí", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:31, fat_g:0.2, carbs_g:7.4, sugar_g:3.8, protein_g:1.4,
+    vitamins:{vitC_mg:57}, minerals:{}},
+  {name:"Cibule", group:"Zelenina", portion_g:80, portion_label:"1 kus (80 g)",
+    kcal:40, fat_g:0.1, carbs_g:9.3, sugar_g:4.2, protein_g:1.1,
+    vitamins:{vitC_mg:7.4}, minerals:{}},
+  {name:"Česnek", group:"Zelenina", portion_g:5, portion_label:"1 stroužek (5 g)",
+    kcal:149, fat_g:0.5, carbs_g:33, sugar_g:1, protein_g:6.4,
+    vitamins:{vitC_mg:31.2}, minerals:{mangan_mg:1.7}},
+  {name:"Pórek", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:61, fat_g:0.3, carbs_g:14, sugar_g:3.9, protein_g:1.5,
+    vitamins:{vitK_ug:47,vitA_ug:83}, minerals:{}},
+  {name:"Řepa (vařená)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:44, fat_g:0.2, carbs_g:10, sugar_g:7, protein_g:1.7,
+    vitamins:{vitB9_ug:80}, minerals:{draslik_mg:305}},
+  {name:"Ředkvička", group:"Zelenina", portion_g:60, portion_label:"1 hrst (60 g)",
+    kcal:16, fat_g:0.1, carbs_g:3.4, sugar_g:1.9, protein_g:0.7,
+    vitamins:{vitC_mg:14.8}, minerals:{}},
+  {name:"Ředkev černá", group:"Zelenina", portion_g:80, portion_label:"1 porce (80 g)",
+    kcal:21, fat_g:0.2, carbs_g:4.1, sugar_g:2.5, protein_g:1.4,
+    vitamins:{}, minerals:{}},
+  {name:"Celer (bulva)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:18, fat_g:0.2, carbs_g:3, sugar_g:1.8, protein_g:0.7,
+    vitamins:{vitK_ug:29.3}, minerals:{draslik_mg:260}},
+  {name:"Kukuřice (vařená)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:96, fat_g:1.5, carbs_g:21, sugar_g:4.5, protein_g:3.4,
+    vitamins:{vitB9_ug:46}, minerals:{}},
+  {name:"Hrášek zelený (vařený)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:84, fat_g:0.2, carbs_g:14, sugar_g:5.7, protein_g:5.4,
+    vitamins:{vitK_ug:24.8,vitB9_ug:65}, minerals:{}},
+  {name:"Fazolky zelené (vařené)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:35, fat_g:0.3, carbs_g:7.9, sugar_g:3.3, protein_g:1.9,
+    vitamins:{vitC_mg:12.2,vitK_ug:43}, minerals:{}},
+  {name:"Dýně Hokkaido", group:"Zelenina", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:26, fat_g:0.1, carbs_g:6.5, sugar_g:2.2, protein_g:1,
+    vitamins:{vitA_ug:170}, minerals:{}},
+  {name:"Topinambur (vařený)", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:73, fat_g:0.1, carbs_g:17, sugar_g:9, protein_g:2.4,
+    vitamins:{}, minerals:{draslik_mg:644}},
+  {name:"Artyčoky (vařené)", group:"Zelenina", portion_g:120, portion_label:"1 kus (120 g)",
+    kcal:47, fat_g:0.4, carbs_g:10, sugar_g:1, protein_g:3.3,
+    vitamins:{vitB9_ug:68}, minerals:{draslik_mg:286}},
+  {name:"Fenykl", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:31, fat_g:0.2, carbs_g:7.3, sugar_g:3.9, protein_g:1.2,
+    vitamins:{vitC_mg:12}, minerals:{draslik_mg:414}},
+  {name:"Hlávkový salát", group:"Zelenina", portion_g:80, portion_label:"1 porce (80 g)",
+    kcal:15, fat_g:0.2, carbs_g:2.9, sugar_g:1.2, protein_g:1.4,
+    vitamins:{vitA_ug:166,vitK_ug:102}, minerals:{}},
+  {name:"Rukola", group:"Zelenina", portion_g:40, portion_label:"1 hrst (40 g)",
+    kcal:25, fat_g:0.7, carbs_g:3.7, sugar_g:2.1, protein_g:2.6,
+    vitamins:{vitK_ug:109,vitC_mg:15}, minerals:{}},
+  {name:"Čínské zelí", group:"Zelenina", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:13, fat_g:0.2, carbs_g:2.2, sugar_g:1.2, protein_g:1.5,
+    vitamins:{vitC_mg:27,vitK_ug:46}, minerals:{}},
+  {name:"Zázvor (čerstvý)", group:"Zelenina", portion_g:5, portion_label:"kousek (5 g)",
+    kcal:80, fat_g:0.8, carbs_g:18, sugar_g:1.7, protein_g:1.8,
+    vitamins:{}, minerals:{}},
+  {name:"Chilli papričky (čerstvé)", group:"Zelenina", portion_g:10, portion_label:"1 kus (10 g)",
+    kcal:40, fat_g:0.4, carbs_g:9, sugar_g:5, protein_g:1.9,
+    vitamins:{vitC_mg:144}, minerals:{}},
+
+  /* --- Přílohy a obiloviny navíc --- */
+  {name:"Pohanka (vařená)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:92, fat_g:0.6, carbs_g:20, sugar_g:0.9, protein_g:3.4,
+    vitamins:{}, minerals:{horcik_mg:51,mangan_mg:0.6}},
+  {name:"Bulgur (vařený)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:83, fat_g:0.2, carbs_g:19, sugar_g:0.1, protein_g:3.1,
+    vitamins:{}, minerals:{mangan_mg:0.6}},
+  {name:"Kuskus (vařený)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:112, fat_g:0.2, carbs_g:23, sugar_g:0.1, protein_g:3.8,
+    vitamins:{}, minerals:{selen_ug:21}},
+  {name:"Těstoviny celozrnné (vařené)", group:"Přílohy a obiloviny", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:124, fat_g:1.4, carbs_g:26, sugar_g:0.8, protein_g:5.3,
+    vitamins:{}, minerals:{horcik_mg:29}},
+  {name:"Těstoviny bílé (vařené)", group:"Přílohy a obiloviny", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:131, fat_g:1.1, carbs_g:25, sugar_g:0.6, protein_g:5,
+    vitamins:{}, minerals:{}},
+  {name:"Jáhly (proso, vařené)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:119, fat_g:1, carbs_g:23, sugar_g:0.2, protein_g:3.5,
+    vitamins:{}, minerals:{horcik_mg:44}},
+  {name:"Amarant (vařený)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:102, fat_g:1.6, carbs_g:19, sugar_g:0, protein_g:3.8,
+    vitamins:{}, minerals:{zelezo_mg:2.1,horcik_mg:42}},
+  {name:"Ječmen (vařený)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:123, fat_g:0.4, carbs_g:28, sugar_g:0.4, protein_g:2.3,
+    vitamins:{}, minerals:{mangan_mg:0.4}},
+  {name:"Špalda (vařená)", group:"Přílohy a obiloviny", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:127, fat_g:0.9, carbs_g:26, sugar_g:0, protein_g:5.5,
+    vitamins:{}, minerals:{horcik_mg:38}},
+
+  /* --- Tuky navíc --- */
+  {name:"Kokosový olej", group:"Tuky", portion_g:14, portion_label:"1 lžíce (14 g)",
+    kcal:862, fat_g:100, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Řepkový olej", group:"Tuky", portion_g:14, portion_label:"1 lžíce (14 g)",
+    kcal:884, fat_g:100, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{vitE_mg:17.5}, minerals:{}},
+  {name:"Arašídové máslo", group:"Tuky", portion_g:20, portion_label:"1 lžíce (20 g)",
+    kcal:588, fat_g:50, carbs_g:20, sugar_g:9, protein_g:25,
+    vitamins:{}, minerals:{horcik_mg:168,zinek_mg:2.9}},
+  {name:"Mandlové máslo", group:"Tuky", portion_g:20, portion_label:"1 lžíce (20 g)",
+    kcal:614, fat_g:56, carbs_g:19, sugar_g:4.4, protein_g:21,
+    vitamins:{}, minerals:{vapnik_mg:347,horcik_mg:275}},
+  {name:"Ghí (přepuštěné máslo)", group:"Tuky", portion_g:10, portion_label:"1 lžička (10 g)",
+    kcal:900, fat_g:100, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{vitA_ug:869}, minerals:{}},
+
+  /* --- Ořechy a semínka navíc --- */
+  {name:"Arašídy (syrové)", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:567, fat_g:49, carbs_g:16, sugar_g:4, protein_g:26,
+    vitamins:{vitB3_mg:12.1}, minerals:{horcik_mg:168}},
+  {name:"Pistácie", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:560, fat_g:45, carbs_g:28, sugar_g:7.7, protein_g:20,
+    vitamins:{vitB6_mg:1.7}, minerals:{draslik_mg:1025}},
+  {name:"Lískové ořechy", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:628, fat_g:61, carbs_g:17, sugar_g:4.3, protein_g:15,
+    vitamins:{vitE_mg:15}, minerals:{mangan_mg:6.2}},
+  {name:"Makadamové ořechy", group:"Ořechy a semínka", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:718, fat_g:76, carbs_g:14, sugar_g:4.6, protein_g:7.9,
+    vitamins:{}, minerals:{mangan_mg:4.1}},
+  {name:"Chia semínka", group:"Ořechy a semínka", portion_g:15, portion_label:"1 lžíce (15 g)",
+    kcal:486, fat_g:31, carbs_g:42, sugar_g:0, protein_g:17,
+    vitamins:{}, minerals:{vapnik_mg:631,horcik_mg:335,zelezo_mg:7.7}},
+  {name:"Lněná semínka", group:"Ořechy a semínka", portion_g:15, portion_label:"1 lžíce (15 g)",
+    kcal:534, fat_g:42, carbs_g:29, sugar_g:1.6, protein_g:18,
+    vitamins:{}, minerals:{horcik_mg:392,mangan_mg:2.5}},
+  {name:"Konopná semínka", group:"Ořechy a semínka", portion_g:20, portion_label:"2 lžíce (20 g)",
+    kcal:553, fat_g:49, carbs_g:8.7, sugar_g:1.5, protein_g:31,
+    vitamins:{}, minerals:{horcik_mg:700,zelezo_mg:7.9}},
+  {name:"Piniové oříšky", group:"Ořechy a semínka", portion_g:20, portion_label:"2 lžíce (20 g)",
+    kcal:673, fat_g:68, carbs_g:13, sugar_g:3.6, protein_g:14,
+    vitamins:{}, minerals:{mangan_mg:8.8,zinek_mg:6.5}},
+  {name:"Sušené fíky", group:"Ořechy a semínka", portion_g:30, portion_label:"2 kusy (30 g)",
+    kcal:249, fat_g:0.9, carbs_g:64, sugar_g:48, protein_g:3.3,
+    vitamins:{}, minerals:{vapnik_mg:162,draslik_mg:680}},
+  {name:"Sušené meruňky", group:"Ořechy a semínka", portion_g:30, portion_label:"5 kusů (30 g)",
+    kcal:241, fat_g:0.5, carbs_g:63, sugar_g:53, protein_g:3.4,
+    vitamins:{vitA_ug:180}, minerals:{draslik_mg:1162}},
+  {name:"Sušené švestky", group:"Ořechy a semínka", portion_g:30, portion_label:"5 kusů (30 g)",
+    kcal:240, fat_g:0.4, carbs_g:64, sugar_g:38, protein_g:2.2,
+    vitamins:{vitK_ug:60}, minerals:{draslik_mg:732}},
+  {name:"Kokos (čerstvý strouhaný)", group:"Ořechy a semínka", portion_g:20, portion_label:"2 lžíce (20 g)",
+    kcal:354, fat_g:33, carbs_g:15, sugar_g:6, protein_g:3.3,
+    vitamins:{}, minerals:{}},
+
+  /* --- Ostatní --- */
+  {name:"Olivy (zelené/černé)", group:"Ostatní", portion_g:20, portion_label:"pár kusů (20 g)",
+    kcal:145, fat_g:15, carbs_g:3.8, sugar_g:0.5, protein_g:1,
+    vitamins:{vitE_mg:3.8}, minerals:{}},
+  {name:"Hummus", group:"Ostatní", portion_g:40, portion_label:"2 lžíce (40 g)",
+    kcal:166, fat_g:9.6, carbs_g:14, sugar_g:0.3, protein_g:7.9,
+    vitamins:{vitB9_ug:58}, minerals:{zelezo_mg:1.9}},
+  {name:"Popcorn (přírodní)", group:"Ostatní", portion_g:25, portion_label:"1 miska (25 g)",
+    kcal:387, fat_g:4.5, carbs_g:78, sugar_g:0.9, protein_g:13,
+    vitamins:{}, minerals:{mangan_mg:1.3}},
+  {name:"Med", group:"Ostatní", portion_g:20, portion_label:"1 lžíce (20 g)",
+    kcal:304, fat_g:0, carbs_g:82, sugar_g:82, protein_g:0.3,
+    vitamins:{}, minerals:{}},
+  {name:"Javorový sirup", group:"Ostatní", portion_g:20, portion_label:"1 lžíce (20 g)",
+    kcal:260, fat_g:0, carbs_g:67, sugar_g:60, protein_g:0,
+    vitamins:{}, minerals:{mangan_mg:1.2}},
+  {name:"Kakao (nesladké, prášek)", group:"Ostatní", portion_g:10, portion_label:"1 lžíce (10 g)",
+    kcal:228, fat_g:14, carbs_g:58, sugar_g:1.8, protein_g:20,
+    vitamins:{}, minerals:{horcik_mg:499,zelezo_mg:13.9}},
+  {name:"Skořice (mletá)", group:"Ostatní", portion_g:3, portion_label:"1 lžička (3 g)",
+    kcal:247, fat_g:1.2, carbs_g:81, sugar_g:2.2, protein_g:4,
+    vitamins:{}, minerals:{mangan_mg:17}},
+  {name:"Kurkuma (mletá)", group:"Ostatní", portion_g:3, portion_label:"1 lžička (3 g)",
+    kcal:312, fat_g:3.3, carbs_g:67, sugar_g:3.2, protein_g:9.7,
+    vitamins:{}, minerals:{zelezo_mg:41}},
+
+  /* --- Nápoje --- */
+  {name:"Pomerančový džus (100%)", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:45, fat_g:0.2, carbs_g:10.4, sugar_g:8.4, protein_g:0.7,
+    vitamins:{vitC_mg:50}, minerals:{draslik_mg:200}},
+  {name:"Jablečný džus (100%)", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:46, fat_g:0.1, carbs_g:11.3, sugar_g:10.1, protein_g:0.1,
+    vitamins:{vitC_mg:1}, minerals:{}},
+  {name:"Hroznový džus", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:60, fat_g:0.1, carbs_g:15, sugar_g:14, protein_g:0.4,
+    vitamins:{}, minerals:{draslik_mg:130}},
+  {name:"Multivitaminový džus", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:48, fat_g:0.1, carbs_g:11, sugar_g:10, protein_g:0.5,
+    vitamins:{vitC_mg:30}, minerals:{}},
+  {name:"Rajčatová šťáva", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:17, fat_g:0.1, carbs_g:3.5, sugar_g:2.6, protein_g:0.9,
+    vitamins:{vitC_mg:13}, minerals:{draslik_mg:220}},
+  {name:"Mrkvová šťáva", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:28, fat_g:0.1, carbs_g:6.7, sugar_g:4.5, protein_g:0.9,
+    vitamins:{vitA_ug:1200}, minerals:{draslik_mg:290}},
+  {name:"Ananasový džus", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:53, fat_g:0.1, carbs_g:13, sugar_g:10, protein_g:0.4,
+    vitamins:{vitC_mg:8}, minerals:{}},
+  {name:"Grapefruitový džus", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:39, fat_g:0.1, carbs_g:9.2, sugar_g:8.5, protein_g:0.5,
+    vitamins:{vitC_mg:31}, minerals:{}},
+  {name:"Brusinkový džus (100%)", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:46, fat_g:0.1, carbs_g:12, sugar_g:12, protein_g:0.4,
+    vitamins:{vitC_mg:8}, minerals:{}},
+  {name:"Jablečný mošt (nefiltrovaný)", group:"Nápoje", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:47, fat_g:0.1, carbs_g:11.9, sugar_g:10.5, protein_g:0.1,
+    vitamins:{}, minerals:{}},
+  {name:"Kokosová voda", group:"Nápoje", portion_g:250, portion_label:"1 sklenice (250 ml)",
+    kcal:19, fat_g:0.2, carbs_g:3.7, sugar_g:2.6, protein_g:0.7,
+    vitamins:{}, minerals:{draslik_mg:250}},
+  {name:"Coca-Cola", group:"Nápoje", portion_g:330, portion_label:"1 plechovka (330 ml)",
+    kcal:42, fat_g:0, carbs_g:10.6, sugar_g:10.6, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Limonáda (sycená, sladká)", group:"Nápoje", portion_g:330, portion_label:"1 plechovka (330 ml)",
+    kcal:41, fat_g:0, carbs_g:10.5, sugar_g:10.5, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Ledový čaj (slazený)", group:"Nápoje", portion_g:330, portion_label:"1 lahev (330 ml)",
+    kcal:35, fat_g:0, carbs_g:8.5, sugar_g:8.3, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Energetický nápoj", group:"Nápoje", portion_g:250, portion_label:"1 plechovka (250 ml)",
+    kcal:45, fat_g:0, carbs_g:11, sugar_g:11, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Pivo (12°, ležák)", group:"Nápoje", portion_g:500, portion_label:"1 půllitr (500 ml)",
+    kcal:45, fat_g:0, carbs_g:3.6, sugar_g:0, protein_g:0.5,
+    vitamins:{vitB9_ug:6}, minerals:{draslik_mg:27}},
+  {name:"Víno červené", group:"Nápoje", portion_g:150, portion_label:"1 sklenka (150 ml)",
+    kcal:85, fat_g:0, carbs_g:2.6, sugar_g:0.6, protein_g:0.1,
+    vitamins:{}, minerals:{draslik_mg:148}},
+  {name:"Víno bílé", group:"Nápoje", portion_g:150, portion_label:"1 sklenka (150 ml)",
+    kcal:82, fat_g:0, carbs_g:2.6, sugar_g:1.2, protein_g:0.1,
+    vitamins:{}, minerals:{}},
+  {name:"Černý čaj (neslazený)", group:"Nápoje", portion_g:250, portion_label:"1 hrnek (250 ml)",
+    kcal:1, fat_g:0, carbs_g:0.3, sugar_g:0, protein_g:0,
+    vitamins:{}, minerals:{fluor_mg:0.3}},
+  {name:"Zelený čaj (neslazený)", group:"Nápoje", portion_g:250, portion_label:"1 hrnek (250 ml)",
+    kcal:1, fat_g:0, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{}, minerals:{fluor_mg:0.3}},
+  {name:"Káva (černá, bez mléka)", group:"Nápoje", portion_g:200, portion_label:"1 hrnek (200 ml)",
+    kcal:2, fat_g:0, carbs_g:0.3, sugar_g:0, protein_g:0.1,
+    vitamins:{vitB3_mg:0.5}, minerals:{draslik_mg:116}},
+  {name:"Kakao nápoj (mléko a čokoláda)", group:"Nápoje", portion_g:250, portion_label:"1 hrnek (250 ml)",
+    kcal:85, fat_g:3.3, carbs_g:11, sugar_g:10, protein_g:3.2,
+    vitamins:{vitB2_mg:0.15}, minerals:{vapnik_mg:100}},
+  {name:"Nealkoholické pivo", group:"Nápoje", portion_g:500, portion_label:"1 lahev (500 ml)",
+    kcal:25, fat_g:0, carbs_g:5.8, sugar_g:2.8, protein_g:0.4,
+    vitamins:{}, minerals:{}},
+  {name:"Tonic (sycený)", group:"Nápoje", portion_g:250, portion_label:"1 sklenice (250 ml)",
+    kcal:34, fat_g:0, carbs_g:8.8, sugar_g:8.8, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Perlivá voda (neochucená)", group:"Nápoje", portion_g:330, portion_label:"1 lahev (330 ml)",
+    kcal:0, fat_g:0, carbs_g:0, sugar_g:0, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Iontový nápoj (sportovní)", group:"Nápoje", portion_g:500, portion_label:"1 lahev (500 ml)",
+    kcal:24, fat_g:0, carbs_g:6, sugar_g:6, protein_g:0,
+    vitamins:{}, minerals:{draslik_mg:25}},
+  {name:"Cappuccino (s mlékem)", group:"Nápoje", portion_g:200, portion_label:"1 šálek (200 ml)",
+    kcal:39, fat_g:1.9, carbs_g:3.3, sugar_g:3.3, protein_g:2,
+    vitamins:{}, minerals:{vapnik_mg:70}},
+  {name:"Matcha nápoj (s mlékem)", group:"Nápoje", portion_g:250, portion_label:"1 hrnek (250 ml)",
+    kcal:55, fat_g:2, carbs_g:6, sugar_g:5, protein_g:2.5,
+    vitamins:{}, minerals:{}},
+  {name:"Kombucha", group:"Nápoje", portion_g:250, portion_label:"1 sklenice (250 ml)",
+    kcal:25, fat_g:0, carbs_g:6, sugar_g:3, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Proteinový nápoj (syrovátkový)", group:"Nápoje", portion_g:250, portion_label:"1 sklenice (250 ml)",
+    kcal:60, fat_g:1, carbs_g:3, sugar_g:2, protein_g:11,
+    vitamins:{}, minerals:{vapnik_mg:80}},
+
+  /* --- Suroviny a koření --- */
+  {name:"Mouka pšeničná (hladká)", group:"Suroviny", portion_g:100, portion_label:"1 hrnek (100 g)",
+    kcal:364, fat_g:1, carbs_g:76, sugar_g:0.3, protein_g:10.3,
+    vitamins:{vitB1_mg:0.1}, minerals:{zelezo_mg:1.2}},
+  {name:"Mouka celozrnná", group:"Suroviny", portion_g:100, portion_label:"1 hrnek (100 g)",
+    kcal:340, fat_g:2.5, carbs_g:72, sugar_g:0.4, protein_g:13,
+    vitamins:{vitB1_mg:0.4,vitB3_mg:5}, minerals:{horcik_mg:138,zelezo_mg:3.6,mangan_mg:3.8}},
+  {name:"Cukr krystalový", group:"Suroviny", portion_g:10, portion_label:"1 lžička (10 g)",
+    kcal:400, fat_g:0, carbs_g:100, sugar_g:100, protein_g:0,
+    vitamins:{}, minerals:{}},
+  {name:"Droždí (čerstvé)", group:"Suroviny", portion_g:10, portion_label:"1 kostka (10 g)",
+    kcal:105, fat_g:1.1, carbs_g:11, sugar_g:0, protein_g:8,
+    vitamins:{vitB1_mg:2.4,vitB2_mg:1.8}, minerals:{}},
+  {name:"Rajčatový protlak", group:"Suroviny", portion_g:30, portion_label:"1 lžíce (30 g)",
+    kcal:82, fat_g:0.5, carbs_g:19, sugar_g:12, protein_g:4.3,
+    vitamins:{vitC_mg:22}, minerals:{draslik_mg:400}},
+  {name:"Kečup", group:"Suroviny", portion_g:15, portion_label:"1 lžíce (15 g)",
+    kcal:112, fat_g:0.2, carbs_g:27, sugar_g:22, protein_g:1.6,
+    vitamins:{}, minerals:{}},
+  {name:"Hořčice", group:"Suroviny", portion_g:10, portion_label:"1 lžička (10 g)",
+    kcal:66, fat_g:3.3, carbs_g:5, sugar_g:3, protein_g:4,
+    vitamins:{}, minerals:{}},
+  {name:"Majonéza", group:"Suroviny", portion_g:15, portion_label:"1 lžíce (15 g)",
+    kcal:680, fat_g:75, carbs_g:1, sugar_g:1, protein_g:1,
+    vitamins:{vitE_mg:5}, minerals:{}},
+  {name:"Sójová omáčka", group:"Suroviny", portion_g:15, portion_label:"1 lžíce (15 ml)",
+    kcal:53, fat_g:0.1, carbs_g:4.9, sugar_g:0.4, protein_g:8,
+    vitamins:{}, minerals:{}},
+  {name:"Ocet balsamikový", group:"Suroviny", portion_g:15, portion_label:"1 lžíce (15 ml)",
+    kcal:88, fat_g:0, carbs_g:17, sugar_g:15, protein_g:0.5,
+    vitamins:{}, minerals:{}},
+  {name:"BBQ omáčka", group:"Suroviny", portion_g:20, portion_label:"1 lžíce (20 g)",
+    kcal:172, fat_g:0.6, carbs_g:38, sugar_g:32, protein_g:1,
+    vitamins:{}, minerals:{}},
+
+  /* --- Svačiny a sladkosti --- */
+  {name:"Brambůrky (chipsy)", group:"Svačiny a sladkosti", portion_g:40, portion_label:"1 sáček (40 g)",
+    kcal:536, fat_g:34, carbs_g:50, sugar_g:0.7, protein_g:6.6,
+    vitamins:{}, minerals:{draslik_mg:1200}},
+  {name:"Slané tyčinky", group:"Svačiny a sladkosti", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:410, fat_g:11, carbs_g:68, sugar_g:2, protein_g:11,
+    vitamins:{}, minerals:{}},
+  {name:"Sušenky (obyčejné)", group:"Svačiny a sladkosti", portion_g:30, portion_label:"3 kusy (30 g)",
+    kcal:480, fat_g:20, carbs_g:67, sugar_g:25, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Oplatky", group:"Svačiny a sladkosti", portion_g:30, portion_label:"1 balení (30 g)",
+    kcal:510, fat_g:28, carbs_g:58, sugar_g:38, protein_g:5,
+    vitamins:{}, minerals:{}},
+  {name:"Zmrzlina vanilková", group:"Svačiny a sladkosti", portion_g:100, portion_label:"2 kopečky (100 g)",
+    kcal:207, fat_g:11, carbs_g:24, sugar_g:21, protein_g:3.5,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Zmrzlina čokoládová", group:"Svačiny a sladkosti", portion_g:100, portion_label:"2 kopečky (100 g)",
+    kcal:216, fat_g:12, carbs_g:26, sugar_g:23, protein_g:3.8,
+    vitamins:{}, minerals:{vapnik_mg:105}},
+  {name:"Čokoláda mléčná", group:"Svačiny a sladkosti", portion_g:25, portion_label:"pár kostek (25 g)",
+    kcal:535, fat_g:30, carbs_g:57, sugar_g:56, protein_g:7.6,
+    vitamins:{}, minerals:{vapnik_mg:189}},
+  {name:"Čokoládová tyčinka (typu Snickers)", group:"Svačiny a sladkosti", portion_g:50, portion_label:"1 kus (50 g)",
+    kcal:488, fat_g:24, carbs_g:58, sugar_g:50, protein_g:8,
+    vitamins:{}, minerals:{}},
+  {name:"Bonbóny (želé)", group:"Svačiny a sladkosti", portion_g:30, portion_label:"1 hrst (30 g)",
+    kcal:340, fat_g:0.2, carbs_g:83, sugar_g:60, protein_g:4,
+    vitamins:{}, minerals:{}},
+  {name:"Müsli tyčinka", group:"Svačiny a sladkosti", portion_g:30, portion_label:"1 kus (30 g)",
+    kcal:410, fat_g:14, carbs_g:65, sugar_g:28, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Proteinová tyčinka", group:"Svačiny a sladkosti", portion_g:50, portion_label:"1 kus (50 g)",
+    kcal:380, fat_g:12, carbs_g:38, sugar_g:20, protein_g:30,
+    vitamins:{}, minerals:{}},
+  {name:"Jogurtová tyčinka", group:"Svačiny a sladkosti", portion_g:25, portion_label:"1 kus (25 g)",
+    kcal:450, fat_g:22, carbs_g:54, sugar_g:40, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Ovesné sušenky", group:"Svačiny a sladkosti", portion_g:30, portion_label:"3 kusy (30 g)",
+    kcal:460, fat_g:20, carbs_g:62, sugar_g:24, protein_g:7,
+    vitamins:{}, minerals:{}},
+
+  /* --- Klasická česká jídla --- */
+  {name:"Svíčková na smetaně (s knedlíkem)", group:"Klasická jídla", portion_g:400, portion_label:"1 porce (400 g)",
+    kcal:185, fat_g:10, carbs_g:15, sugar_g:4, protein_g:9,
+    vitamins:{}, minerals:{}},
+  {name:"Guláš hovězí", group:"Klasická jídla", portion_g:350, portion_label:"1 porce (350 g)",
+    kcal:150, fat_g:8, carbs_g:6, sugar_g:2, protein_g:13,
+    vitamins:{}, minerals:{zelezo_mg:1.8}},
+  {name:"Vepřo-knedlo-zelo", group:"Klasická jídla", portion_g:450, portion_label:"1 porce (450 g)",
+    kcal:210, fat_g:12, carbs_g:18, sugar_g:4, protein_g:10,
+    vitamins:{}, minerals:{}},
+  {name:"Smažený řízek (vepřový)", group:"Klasická jídla", portion_g:150, portion_label:"1 kus (150 g)",
+    kcal:310, fat_g:20, carbs_g:14, sugar_g:1, protein_g:20,
+    vitamins:{}, minerals:{}},
+  {name:"Bramborový salát", group:"Klasická jídla", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:145, fat_g:7, carbs_g:17, sugar_g:3, protein_g:3,
+    vitamins:{}, minerals:{}},
+  {name:"Rajská omáčka s knedlíkem", group:"Klasická jídla", portion_g:350, portion_label:"1 porce (350 g)",
+    kcal:130, fat_g:5, carbs_g:17, sugar_g:6, protein_g:4,
+    vitamins:{}, minerals:{}},
+  {name:"Kuřecí vývar (polévka)", group:"Klasická jídla", portion_g:250, portion_label:"1 talíř (250 ml)",
+    kcal:25, fat_g:1, carbs_g:2, sugar_g:0.5, protein_g:2,
+    vitamins:{}, minerals:{}},
+  {name:"Bramboračka", group:"Klasická jídla", portion_g:300, portion_label:"1 talíř (300 ml)",
+    kcal:55, fat_g:2, carbs_g:7, sugar_g:1, protein_g:2,
+    vitamins:{}, minerals:{}},
+  {name:"Čočka na kyselo", group:"Klasická jídla", portion_g:300, portion_label:"1 porce (300 g)",
+    kcal:110, fat_g:3, carbs_g:16, sugar_g:2, protein_g:5,
+    vitamins:{vitB9_ug:80}, minerals:{zelezo_mg:1.8}},
+  {name:"Palačinky (bez náplně)", group:"Klasická jídla", portion_g:60, portion_label:"1 kus (60 g)",
+    kcal:230, fat_g:8, carbs_g:32, sugar_g:6, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Lívance", group:"Klasická jídla", portion_g:80, portion_label:"3 kusy (80 g)",
+    kcal:250, fat_g:8, carbs_g:36, sugar_g:8, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Vafle (belgické)", group:"Klasická jídla", portion_g:70, portion_label:"1 kus (70 g)",
+    kcal:290, fat_g:11, carbs_g:42, sugar_g:18, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Knedlíky houskové", group:"Klasická jídla", portion_g:100, portion_label:"2 plátky (100 g)",
+    kcal:210, fat_g:2, carbs_g:42, sugar_g:2, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Knedlíky bramborové", group:"Klasická jídla", portion_g:100, portion_label:"2 plátky (100 g)",
+    kcal:190, fat_g:1.5, carbs_g:40, sugar_g:1, protein_g:5,
+    vitamins:{}, minerals:{}},
+  {name:"Buchty (kynuté, s náplní)", group:"Klasická jídla", portion_g:80, portion_label:"1 kus (80 g)",
+    kcal:310, fat_g:10, carbs_g:48, sugar_g:18, protein_g:7,
+    vitamins:{}, minerals:{}},
+  {name:"Tvarohový koláč", group:"Klasická jídla", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:280, fat_g:13, carbs_g:33, sugar_g:20, protein_g:8,
+    vitamins:{}, minerals:{vapnik_mg:80}},
+  {name:"Trdelník", group:"Klasická jídla", portion_g:80, portion_label:"1 kus (80 g)",
+    kcal:380, fat_g:14, carbs_g:55, sugar_g:25, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Bramborák", group:"Klasická jídla", portion_g:100, portion_label:"1 kus (100 g)",
+    kcal:220, fat_g:11, carbs_g:24, sugar_g:1, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Bramborové krokety", group:"Klasická jídla", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:210, fat_g:10, carbs_g:26, sugar_g:1, protein_g:3.5,
+    vitamins:{}, minerals:{}},
+
+  /* --- Mezinárodní klasika --- */
+  {name:"Pizza Margherita", group:"Mezinárodní klasika", portion_g:150, portion_label:"1/4 pizzy (150 g)",
+    kcal:266, fat_g:10, carbs_g:33, sugar_g:3, protein_g:11,
+    vitamins:{}, minerals:{vapnik_mg:180}},
+  {name:"Špagety Bolognese", group:"Mezinárodní klasika", portion_g:350, portion_label:"1 porce (350 g)",
+    kcal:155, fat_g:6, carbs_g:17, sugar_g:3, protein_g:8,
+    vitamins:{}, minerals:{}},
+  {name:"Hamburger", group:"Mezinárodní klasika", portion_g:200, portion_label:"1 kus (200 g)",
+    kcal:295, fat_g:14, carbs_g:30, sugar_g:5, protein_g:13,
+    vitamins:{}, minerals:{}},
+  {name:"Cheeseburger", group:"Mezinárodní klasika", portion_g:220, portion_label:"1 kus (220 g)",
+    kcal:330, fat_g:17, carbs_g:30, sugar_g:5, protein_g:16,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Hranolky (smažené)", group:"Mezinárodní klasika", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:312, fat_g:14, carbs_g:41, sugar_g:0.5, protein_g:3.4,
+    vitamins:{vitC_mg:9}, minerals:{draslik_mg:580}},
+  {name:"Lasagne", group:"Mezinárodní klasika", portion_g:350, portion_label:"1 porce (350 g)",
+    kcal:170, fat_g:9, carbs_g:14, sugar_g:3, protein_g:9,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Rizoto", group:"Mezinárodní klasika", portion_g:300, portion_label:"1 porce (300 g)",
+    kcal:170, fat_g:6, carbs_g:22, sugar_g:1, protein_g:6,
+    vitamins:{}, minerals:{}},
+  {name:"Sushi (losos, kousky)", group:"Mezinárodní klasika", portion_g:200, portion_label:"8 kusů (200 g)",
+    kcal:150, fat_g:3, carbs_g:27, sugar_g:3, protein_g:5,
+    vitamins:{}, minerals:{}},
+  {name:"Caesar salát (s kuřetem)", group:"Mezinárodní klasika", portion_g:300, portion_label:"1 porce (300 g)",
+    kcal:160, fat_g:10, carbs_g:5, sugar_g:2, protein_g:14,
+    vitamins:{}, minerals:{}},
+  {name:"Toast se šunkou a sýrem", group:"Mezinárodní klasika", portion_g:100, portion_label:"1 kus (100 g)",
+    kcal:280, fat_g:14, carbs_g:26, sugar_g:3, protein_g:14,
+    vitamins:{}, minerals:{vapnik_mg:150}},
+  {name:"Falafel (smažený)", group:"Mezinárodní klasika", portion_g:60, portion_label:"3 kusy (60 g)",
+    kcal:333, fat_g:18, carbs_g:31, sugar_g:2, protein_g:13,
+    vitamins:{vitB9_ug:66}, minerals:{}},
+  {name:"Řecký salát (s fetou a olivami)", group:"Mezinárodní klasika", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:130, fat_g:10, carbs_g:5, sugar_g:3, protein_g:4,
+    vitamins:{vitC_mg:15}, minerals:{vapnik_mg:100}},
+  {name:"Coleslaw salát", group:"Mezinárodní klasika", portion_g:150, portion_label:"1 porce (150 g)",
+    kcal:150, fat_g:11, carbs_g:11, sugar_g:8, protein_g:1,
+    vitamins:{vitC_mg:20}, minerals:{}},
+  {name:"Instantní nudle (asijské)", group:"Mezinárodní klasika", portion_g:85, portion_label:"1 balení (85 g)",
+    kcal:436, fat_g:17, carbs_g:62, sugar_g:3, protein_g:9,
+    vitamins:{}, minerals:{}},
+  {name:"Kuřecí nugetky (smažené)", group:"Mezinárodní klasika", portion_g:100, portion_label:"6 kusů (100 g)",
+    kcal:260, fat_g:15, carbs_g:16, sugar_g:1, protein_g:14,
+    vitamins:{}, minerals:{}},
+
+  /* --- Snídaně a rychlé svačiny --- */
+  {name:"Ovesná kaše (s mlékem)", group:"Snídaně", portion_g:300, portion_label:"1 miska (300 g)",
+    kcal:85, fat_g:2.5, carbs_g:13, sugar_g:3, protein_g:3.5,
+    vitamins:{vitB1_mg:0.15}, minerals:{vapnik_mg:60}},
+  {name:"Smoothie ovocné", group:"Snídaně", portion_g:250, portion_label:"1 sklenice (250 ml)",
+    kcal:55, fat_g:0.3, carbs_g:13, sugar_g:11, protein_g:0.8,
+    vitamins:{vitC_mg:20}, minerals:{}},
+  {name:"Chia pudink", group:"Snídaně", portion_g:200, portion_label:"1 miska (200 g)",
+    kcal:110, fat_g:6, carbs_g:10, sugar_g:5, protein_g:4,
+    vitamins:{}, minerals:{vapnik_mg:150}},
+  {name:"Míchaná vajíčka (na másle)", group:"Snídaně", portion_g:120, portion_label:"2 vejce (120 g)",
+    kcal:190, fat_g:15, carbs_g:1.5, sugar_g:1, protein_g:13,
+    vitamins:{vitA_ug:200}, minerals:{}},
+  {name:"Ovocná přesnídávka (jablko)", group:"Snídaně", portion_g:100, portion_label:"1 kapsička (100 g)",
+    kcal:55, fat_g:0.2, carbs_g:13, sugar_g:12, protein_g:0.3,
+    vitamins:{vitC_mg:15}, minerals:{}},
+
+  /* --- Mléčné výrobky navíc 2 --- */
+  {name:"Skyr (islandský jogurt)", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:63, fat_g:0.2, carbs_g:4, sugar_g:4, protein_g:11,
+    vitamins:{vitB12_ug:0.5}, minerals:{vapnik_mg:150}},
+  {name:"Bílý jogurt s ovocem (ochucený)", group:"Mléčné výrobky", portion_g:150, portion_label:"1 kelímek (150 g)",
+    kcal:95, fat_g:2.5, carbs_g:15, sugar_g:14, protein_g:3.5,
+    vitamins:{}, minerals:{vapnik_mg:100}},
+  {name:"Kešu mléko (neslazené)", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:25, fat_g:2, carbs_g:1, sugar_g:0.5, protein_g:0.5,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Rýžové mléko", group:"Mléčné výrobky", portion_g:200, portion_label:"1 sklenice (200 ml)",
+    kcal:47, fat_g:1, carbs_g:9, sugar_g:4, protein_g:0.3,
+    vitamins:{}, minerals:{vapnik_mg:120}},
+  {name:"Feta sýr", group:"Mléčné výrobky", portion_g:40, portion_label:"1 porce (40 g)",
+    kcal:264, fat_g:21, carbs_g:4, sugar_g:4, protein_g:14,
+    vitamins:{}, minerals:{vapnik_mg:493}},
+
+  /* --- Přílohy a luštěniny navíc 2 --- */
+  {name:"Rýžové nudle (vařené)", group:"Přílohy a obiloviny", portion_g:200, portion_label:"1 porce (200 g)",
+    kcal:109, fat_g:0.2, carbs_g:25, sugar_g:0.1, protein_g:1.8,
+    vitamins:{}, minerals:{}},
+  {name:"Sójové maso (vařené)", group:"Luštěniny", portion_g:100, portion_label:"1 porce (100 g)",
+    kcal:110, fat_g:1, carbs_g:9, sugar_g:2, protein_g:18,
+    vitamins:{}, minerals:{zelezo_mg:4}},
+];
+
+/* ---------- state ---------- */
+let entries = [];
+let activeTab = "log";
+let errorMsg = "";
+let expandedInfo = null;
+const STORAGE_KEY = "samikovo-brikule-offline-entries";
+
+/* ---------- storage (localStorage — plain offline file, no login needed) ---------- */
+function loadEntries(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ entries = JSON.parse(raw); }
+  }catch(e){ /* no entries yet */ }
+  render();
+}
+function saveEntries(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+  catch(e){ console.error("Storage error", e); }
+}
+
+/* ---------- helpers ---------- */
+function fmt(n, unit){
+  if(n === undefined || n === null) n = 0;
+  const rounded = unit === "µg" ? Math.round(n) : Math.round(n*10)/10;
+  return rounded;
+}
+function sumField(getter){
+  return entries.reduce((acc,e)=> acc + (getter(e) || 0), 0);
+}
+function totals(){
+  return {
+    kcal: sumField(e=>e.kcal),
+    fat_g: sumField(e=>e.fat_g),
+    carbs_g: sumField(e=>e.carbs_g),
+    sugar_g: sumField(e=>e.sugar_g),
+    protein_g: sumField(e=>e.protein_g),
+    vitamins: Object.fromEntries(VITAMINS.map(v=>[v.key, sumField(e=>e.vitamins && e.vitamins[v.key])])),
+    minerals: Object.fromEntries(MINERALS.map(m=>[m.key, sumField(e=>e.minerals && e.minerals[m.key])])),
+  };
+}
+
+/* ---------- add food from local database (no network, instant) ---------- */
+function addFood(foodName, grams){
+  errorMsg = "";
+  const food = FOODS.find(f=>f.name === foodName);
+  if(!food){ errorMsg = "Vyber prosím jídlo ze seznamu."; render(); return; }
+  const g = parseFloat(grams);
+  if(!g || g <= 0){ errorMsg = "Zadej platnou gramáž."; render(); return; }
+
+  const scale = g / 100;
+  const entry = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    name: food.name,
+    grams: g,
+    time: new Date().toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}),
+    kcal: food.kcal * scale,
+    fat_g: food.fat_g * scale,
+    carbs_g: food.carbs_g * scale,
+    sugar_g: food.sugar_g * scale,
+    protein_g: food.protein_g * scale,
+    vitamins: Object.fromEntries(Object.entries(food.vitamins || {}).map(([k,v])=>[k, v*scale])),
+    minerals: Object.fromEntries(Object.entries(food.minerals || {}).map(([k,v])=>[k, v*scale])),
+  };
+  entries = [...entries, entry];
+  saveEntries();
+  render();
+}
+
+function removeEntry(id){
+  entries = entries.filter(e=>e.id!==id);
+  saveEntries();
+  render();
+}
+window.removeEntry = removeEntry;
+
+function resetDay(){
+  entries = [];
+  saveEntries();
+  render();
+}
+
+function onFoodChange(){
+  const select = document.getElementById("food-select");
+  const gramsInput = document.getElementById("grams-input");
+  const hint = document.getElementById("portion-hint");
+  const food = FOODS.find(f=>f.name === select.value);
+  if(food){
+    gramsInput.value = food.portion_g;
+    hint.textContent = "Typická porce: " + food.portion_label;
+  } else {
+    hint.textContent = "";
+  }
+}
+window.onFoodChange = onFoodChange;
+
+/* ---------- rendering ---------- */
+function tileHTML(meta, value, category){
+  const pct = meta.nrv ? Math.round((value / meta.nrv) * 100) : 0;
+  const barPct = Math.min(pct, 100);
+  const done = pct >= 100;
+  return `
+    <div class="tile ${category}${done?' done':''}">
+      ${done ? '<span class="check">✓</span>' : ''}
+      <div class="symbol">${meta.symbol}</div>
+      <div class="name">${meta.name}</div>
+      <div class="amt">${fmt(value, meta.unit)} / ${meta.nrv} ${meta.unit}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${barPct}%"></div></div>
+      <div class="pct">${pct} %</div>
+    </div>`;
+}
+
+function infoCardHTML(meta, category){
+  const open = expandedInfo === meta.key;
+  return `
+    <div class="info-card ${category}${open?' open':''}" onclick="toggleInfo('${meta.key}')">
+      <div class="head">
+        <div class="badge">${meta.symbol}</div>
+        <h3>${meta.name}</h3>
+        <span class="chev">${open?'▲':'▼'}</span>
+      </div>
+      <p>${meta.desc}</p>
+      ${open ? `
+        <div class="sources">
+          <div class="sources-label">Nejlepší zdroje</div>
+          <ul>${meta.sources.map(s=>`<li>${s}</li>`).join("")}</ul>
+        </div>` : ''}
+    </div>`;
+}
+
+function toggleInfo(key){
+  expandedInfo = (expandedInfo === key) ? null : key;
+  render();
+}
+window.toggleInfo = toggleInfo;
+
+function render(){
+  const app = document.getElementById("app");
+  const t = totals();
+
+  const groups = [...new Set(FOODS.map(f=>f.group))];
+  const foodOptions = `<option value="" disabled selected>Vyber jídlo…</option>` +
+    groups.map(g=>`
+      <optgroup label="${g}">
+        ${FOODS.filter(f=>f.group===g).map(f=>`<option value="${f.name}">${f.name}</option>`).join("")}
+      </optgroup>`).join("");
+
+  const logTab = `
+    <div class="macro-strip">
+      <div class="macro-box"><div class="val">${Math.round(t.kcal)}</div><div class="lab">kcal</div></div>
+      <div class="macro-box"><div class="val">${fmt(t.fat_g)}<span class="unit">g</span></div><div class="lab">Tuky</div></div>
+      <div class="macro-box"><div class="val">${fmt(t.carbs_g)}<span class="unit">g</span></div><div class="lab">Sacharidy</div><div class="sub">z toho cukry ${fmt(t.sugar_g)} g</div></div>
+      <div class="macro-box"><div class="val">${fmt(t.protein_g)}<span class="unit">g</span></div><div class="lab">Bílkoviny</div></div>
+    </div>
+
+    <div class="section-label">Dnešní jídla</div>
+    ${entries.length === 0
+      ? `<div class="empty-log">Zatím nic nezapsáno — přidej první jídlo výše.</div>`
+      : `<div class="log-list">
+          ${entries.map(e=>`
+            <div class="log-chip">
+              <span class="time">${e.time}</span>
+              <span class="name" title="${e.name.replace(/"/g,'&quot;')}">${e.name} · ${Math.round(e.grams)} g</span>
+              <button onclick="removeEntry('${e.id}')" title="Odebrat">×</button>
+            </div>`).join("")}
+        </div>`
+    }
+
+    <div class="section-label">Vitamíny</div>
+    <div class="tile-grid">
+      ${VITAMINS.map(v=>tileHTML(v, t.vitamins[v.key], "vit")).join("")}
+    </div>
+
+    <div class="section-label">Minerály</div>
+    <div class="tile-grid">
+      ${MINERALS.map(m=>tileHTML(m, t.minerals[m.key], "min")).join("")}
+    </div>
+  `;
+
+  const infoTab = `
+    <div class="section-label">Vitamíny</div>
+    <div class="info-grid">
+      ${VITAMINS.map(v=>infoCardHTML(v,"vit")).join("")}
+    </div>
+    <div class="section-label">Minerály</div>
+    <div class="info-grid">
+      ${MINERALS.map(m=>infoCardHTML(m,"min")).join("")}
+    </div>
+  `;
+
+  app.innerHTML = `
+    <header>
+      <div><h1>Samíkovo brikule</h1></div>
+      <button class="reset-btn" id="reset-btn">↻ Další den</button>
+    </header>
+
+    <div class="entry-form">
+      <select id="food-select" onchange="onFoodChange()">${foodOptions}</select>
+      <input type="number" id="grams-input" min="1" step="1" placeholder="g" style="max-width:90px;" />
+      <button id="add-btn">Přidat</button>
+    </div>
+    <p class="hint" id="portion-hint"></p>
+    ${errorMsg ? `<p class="error-msg">${errorMsg}</p>` : ''}
+
+    <div class="tabs">
+      <button class="tab-btn ${activeTab==='log'?'active':''}" data-tab="log">Dnešní příjem</button>
+      <button class="tab-btn ${activeTab==='info'?'active':''}" data-tab="info">Co dělají živiny</button>
+    </div>
+
+    ${activeTab === 'log' ? logTab : infoTab}
+  `;
+
+  document.getElementById("reset-btn").onclick = resetDay;
+  document.getElementById("add-btn").onclick = () => {
+    const foodName = document.getElementById("food-select").value;
+    const grams = document.getElementById("grams-input").value;
+    addFood(foodName, grams);
+  };
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.onclick = () => { activeTab = btn.dataset.tab; render(); };
+  });
+}
+
+loadEntries();
+</script>
+</body>
+</html>
